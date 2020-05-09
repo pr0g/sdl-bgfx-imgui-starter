@@ -1,0 +1,25 @@
+---
+AccessModifierOffset: -4
+AlignAfterOpenBracket: AlwaysBreak
+AllowShortFunctionsOnASingleLine: InlineOnly
+AlwaysBreakAfterDefinitionReturnType: None
+AlwaysBreakAfterReturnType: None
+AlwaysBreakTemplateDeclarations: Yes
+AllowAllArgumentsOnNextLine: true
+BreakBeforeBraces: Custom
+BraceWrapping:
+    AfterNamespace: true
+    AfterStruct: true
+    AfterClass: true
+    AfterFunction: true
+    SplitEmptyFunction: true
+ColumnLimit: 80
+IndentWidth: 4
+IndentPPDirectives: None
+PenaltyReturnTypeOnItsOwnLine: 1000000000
+PointerAlignment: Left
+SpaceAfterTemplateKeyword: false
+Standard: c++11
+TabWidth: 4
+Cpp11BracedListStyle: true
+...
