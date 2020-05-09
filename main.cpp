@@ -10,9 +10,6 @@
 #include "imgui.h"
 #include "sdl-imgui/imgui_impl_sdl.h"
 
-#include <fstream>
-#include <iostream>
-
 struct PosColorVertex
 {
     float x;
@@ -51,7 +48,7 @@ int main(int argc, char** argv)
         const int width = 800;
         const int height = 600;
         SDL_Window* window = SDL_CreateWindow(
-            "SDL2Test", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width,
+            argv[0], SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width,
             height, SDL_WINDOW_SHOWN);
 
         if (window == nullptr) {
@@ -84,8 +81,6 @@ int main(int argc, char** argv)
         ImGui::CreateContext();
         ImGuiIO& io = ImGui::GetIO();
 
-        ImGui::StyleColorsDark();
-
         ImGui_Implbgfx_Init(255);
         ImGui_ImplSDL2_InitForD3D(window);
 
@@ -105,19 +100,17 @@ int main(int argc, char** argv)
             return 1;
         }
 
-        bgfx::ShaderHandle vsh = create_shader(vshader, "vshader");
-
         std::string fshader;
         if (!read_file("shader/f_simple.bin", fshader)) {
             return 1;
         }
 
+        bgfx::ShaderHandle vsh = create_shader(vshader, "vshader");
         bgfx::ShaderHandle fsh = create_shader(fshader, "fshader");
 
         bgfx::ProgramHandle program = bgfx::createProgram(vsh, fsh, true);
 
         for (bool quit = false; !quit;) {
-            int key = 255;
             SDL_Event currentEvent;
             while (SDL_PollEvent(&currentEvent) != 0) {
                 ImGui_ImplSDL2_ProcessEvent(&currentEvent);
@@ -125,26 +118,13 @@ int main(int argc, char** argv)
                     quit = true;
                     break;
                 }
-
-                switch (currentEvent.type) {
-                    case SDL_KEYDOWN:
-                        int bs = SDLK_BACKSPACE;
-                        key = currentEvent.key.keysym.sym;
-                        break;
-                }
             }
 
             ImGui_Implbgfx_NewFrame();
             ImGui_ImplSDL2_NewFrame(window);
             ImGui::NewFrame();
 
-            // ImGui::ShowDemoWindow();
-
-            ImGui::Text("Hello, world!");
-            static char str1[128] = "";
-            ImGui::InputTextWithHint(
-                "input text (w/ hint)", "enter text here", str1,
-                IM_ARRAYSIZE(str1));
+            ImGui::ShowDemoWindow();
 
             ImGui::Render();
 
