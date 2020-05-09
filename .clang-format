@@ -22,4 +22,5 @@ SpaceAfterTemplateKeyword: false
 Standard: c++11
 TabWidth: 4
 Cpp11BracedListStyle: true
+IndentCaseLabels: true
 ...

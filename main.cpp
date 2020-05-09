@@ -1,17 +1,17 @@
 #include "SDL.h"
 #include "SDL_syswm.h"
-#include "bgfx/bgfx.h"
-#include "bgfx/platform.h"
 #include "as/as-math-ops.hpp"
 #include "as/as-view.hpp"
+#include "bgfx-imgui/imgui_impl_bgfx.h"
+#include "bgfx/bgfx.h"
+#include "bgfx/platform.h"
 #include "camera.hpp"
 #include "file-ops.h"
-#include "bgfx-imgui/imgui_impl_bgfx.h"
-#include "sdl-imgui/imgui_impl_sdl.h"
 #include "imgui.h"
+#include "sdl-imgui/imgui_impl_sdl.h"
 
-#include <iostream>
 #include <fstream>
+#include <iostream>
 
 struct PosColorVertex
 {
@@ -21,35 +21,20 @@ struct PosColorVertex
     uint32_t abgr;
 };
 
-static PosColorVertex cubeVertices[] =
-{
-    {-1.0f,  1.0f,  1.0f, 0xff000000 },
-    { 1.0f,  1.0f,  1.0f, 0xff0000ff },
-    {-1.0f, -1.0f,  1.0f, 0xff00ff00 },
-    { 1.0f, -1.0f,  1.0f, 0xff00ffff },
-    {-1.0f,  1.0f, -1.0f, 0xffff0000 },
-    { 1.0f,  1.0f, -1.0f, 0xffff00ff },
-    {-1.0f, -1.0f, -1.0f, 0xffffff00 },
-    { 1.0f, -1.0f, -1.0f, 0xffffffff },
+static PosColorVertex cubeVertices[] = {
+    {-1.0f, 1.0f, 1.0f, 0xff000000},   {1.0f, 1.0f, 1.0f, 0xff0000ff},
+    {-1.0f, -1.0f, 1.0f, 0xff00ff00},  {1.0f, -1.0f, 1.0f, 0xff00ffff},
+    {-1.0f, 1.0f, -1.0f, 0xffff0000},  {1.0f, 1.0f, -1.0f, 0xffff00ff},
+    {-1.0f, -1.0f, -1.0f, 0xffffff00}, {1.0f, -1.0f, -1.0f, 0xffffffff},
 };
 
-static const uint16_t cubeTriList[] =
-{
-    0, 1, 2,
-    1, 3, 2,
-    4, 6, 5,
-    5, 6, 7,
-    0, 2, 4,
-    4, 2, 6,
-    1, 5, 3,
-    5, 7, 3,
-    0, 4, 1,
-    4, 5, 1,
-    2, 3, 6,
-    6, 3, 7,
+static const uint16_t cubeTriList[] = {
+    0, 1, 2, 1, 3, 2, 4, 6, 5, 5, 6, 7, 0, 2, 4, 4, 2, 6,
+    1, 5, 3, 5, 7, 3, 0, 4, 1, 4, 5, 1, 2, 3, 6, 6, 3, 7,
 };
 
-static bgfx::ShaderHandle create_shader(const std::string& shader, const char* name)
+static bgfx::ShaderHandle create_shader(
+    const std::string& shader, const char* name)
 {
     const bgfx::Memory* mem = bgfx::copy(shader.data(), shader.size());
     const bgfx::ShaderHandle handle = bgfx::createShader(mem);
@@ -57,7 +42,7 @@ static bgfx::ShaderHandle create_shader(const std::string& shader, const char* n
     return handle;
 }
 
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
@@ -66,15 +51,12 @@ int main(int argc, char **argv)
         const int width = 800;
         const int height = 600;
         SDL_Window* window = SDL_CreateWindow(
-            "SDL2Test",
-            SDL_WINDOWPOS_UNDEFINED,
-            SDL_WINDOWPOS_UNDEFINED,
-            width,
-            height,
-            SDL_WINDOW_SHOWN);
+            "SDL2Test", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width,
+            height, SDL_WINDOW_SHOWN);
 
-         if (window == nullptr) {
-            printf("Window could not be created! SDL_Error: %s\n", SDL_GetError());
+        if (window == nullptr) {
+            printf(
+                "Window could not be created! SDL_Error: %s\n", SDL_GetError());
             return 1;
         }
 
@@ -95,7 +77,8 @@ int main(int argc, char **argv)
         bgfxInit.resolution.reset = BGFX_RESET_VSYNC;
         bgfx::init(bgfxInit);
 
-        bgfx::setViewClear(0, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x443355FF, 1.0f, 0);
+        bgfx::setViewClear(
+            0, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x443355FF, 1.0f, 0);
         bgfx::setViewRect(0, 0, 0, width, height);
 
         ImGui::CreateContext();
@@ -111,8 +94,11 @@ int main(int argc, char **argv)
             .add(bgfx::Attrib::Position, 3, bgfx::AttribType::Float)
             .add(bgfx::Attrib::Color0, 4, bgfx::AttribType::Uint8, true)
             .end();
-        bgfx::VertexBufferHandle vbh = bgfx::createVertexBuffer(bgfx::makeRef(cubeVertices, sizeof(cubeVertices)), posColVertLayout);
-        bgfx::IndexBufferHandle ibh = bgfx::createIndexBuffer(bgfx::makeRef(cubeTriList, sizeof(cubeTriList)));
+        bgfx::VertexBufferHandle vbh = bgfx::createVertexBuffer(
+            bgfx::makeRef(cubeVertices, sizeof(cubeVertices)),
+            posColVertLayout);
+        bgfx::IndexBufferHandle ibh = bgfx::createIndexBuffer(
+            bgfx::makeRef(cubeTriList, sizeof(cubeTriList)));
 
         std::string vshader;
         if (!read_file("shader/v_simple.bin", vshader)) {
@@ -156,7 +142,9 @@ int main(int argc, char **argv)
 
             ImGui::Text("Hello, world!");
             static char str1[128] = "";
-            ImGui::InputTextWithHint("input text (w/ hint)", "enter text here", str1, IM_ARRAYSIZE(str1));
+            ImGui::InputTextWithHint(
+                "input text (w/ hint)", "enter text here", str1,
+                IM_ARRAYSIZE(str1));
 
             ImGui::Render();
 
@@ -167,15 +155,15 @@ int main(int argc, char **argv)
 
             float proj[16];
             as::mat::to_arr(
-                as::view::perspective_d3d_lh(as::deg_to_rad(60.0f),
-                float(width) / float(height), 0.1f, 100.0f),
+                as::view::perspective_d3d_lh(
+                    as::deg_to_rad(60.0f), float(width) / float(height), 0.1f,
+                    100.0f),
                 proj);
 
             bgfx::setViewTransform(0, view, proj);
 
-            as::mat4_t rot = as::mat4::from_mat3(
-                as::mat3::rotation_zxy(as::deg_to_rad(45.0f), 0.0f,
-                as::deg_to_rad(45.0f)));
+            as::mat4_t rot = as::mat4::from_mat3(as::mat3::rotation_zxy(
+                as::deg_to_rad(45.0f), 0.0f, as::deg_to_rad(45.0f)));
 
             float model[16];
             as::mat::to_arr(rot, model);

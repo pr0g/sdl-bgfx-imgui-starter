@@ -2,8 +2,8 @@
 
 #include "bgfx/bgfx.h"
 
-#include <iostream>
 #include <fstream>
+#include <iostream>
 
 inline static std::streamoff stream_size(std::istream& file)
 {
