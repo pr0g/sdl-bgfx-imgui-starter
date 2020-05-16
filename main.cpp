@@ -2,13 +2,18 @@
 #include "SDL_syswm.h"
 #include "as/as-math-ops.hpp"
 #include "as/as-view.hpp"
+#include "as-camera/as-camera-controller.hpp"
+#include "sdl-as-camera/sdl-as-camera.h"
 #include "bgfx-imgui/imgui_impl_bgfx.h"
 #include "bgfx/bgfx.h"
 #include "bgfx/platform.h"
-#include "camera.hpp"
 #include "file-ops.h"
 #include "imgui.h"
 #include "sdl-imgui/imgui_impl_sdl.h"
+
+#include <chrono>
+
+using fp_seconds = std::chrono::duration<float, std::chrono::seconds::period>;
 
 struct PosColorVertex
 {
@@ -18,19 +23,19 @@ struct PosColorVertex
     uint32_t abgr;
 };
 
-static PosColorVertex cubeVertices[] = {
+static PosColorVertex cube_vertices[] = {
     {-1.0f, 1.0f, 1.0f, 0xff000000},   {1.0f, 1.0f, 1.0f, 0xff0000ff},
     {-1.0f, -1.0f, 1.0f, 0xff00ff00},  {1.0f, -1.0f, 1.0f, 0xff00ffff},
     {-1.0f, 1.0f, -1.0f, 0xffff0000},  {1.0f, 1.0f, -1.0f, 0xffff00ff},
     {-1.0f, -1.0f, -1.0f, 0xffffff00}, {1.0f, -1.0f, -1.0f, 0xffffffff},
 };
 
-static const uint16_t cubeTriList[] = {
+static const uint16_t cube_tri_list[] = {
     0, 1, 2, 1, 3, 2, 4, 6, 5, 5, 6, 7, 0, 2, 4, 4, 2, 6,
     1, 5, 3, 5, 7, 3, 0, 4, 1, 4, 5, 1, 2, 3, 6, 6, 3, 7,
 };
 
-static bgfx::ShaderHandle create_shader(
+static bgfx::ShaderHandle createShader(
     const std::string& shader, const char* name)
 {
     const bgfx::Memory* mem = bgfx::copy(shader.data(), shader.size());
@@ -90,10 +95,10 @@ int main(int argc, char** argv)
             .add(bgfx::Attrib::Color0, 4, bgfx::AttribType::Uint8, true)
             .end();
         bgfx::VertexBufferHandle vbh = bgfx::createVertexBuffer(
-            bgfx::makeRef(cubeVertices, sizeof(cubeVertices)),
+            bgfx::makeRef(cube_vertices, sizeof(cube_vertices)),
             posColVertLayout);
         bgfx::IndexBufferHandle ibh = bgfx::createIndexBuffer(
-            bgfx::makeRef(cubeTriList, sizeof(cubeTriList)));
+            bgfx::makeRef(cube_tri_list, sizeof(cube_tri_list)));
 
         std::string vshader;
         if (!read_file("shader/v_simple.bin", vshader)) {
@@ -105,14 +110,26 @@ int main(int argc, char** argv)
             return 1;
         }
 
-        bgfx::ShaderHandle vsh = create_shader(vshader, "vshader");
-        bgfx::ShaderHandle fsh = create_shader(fshader, "fshader");
+        bgfx::ShaderHandle vsh = createShader(vshader, "vshader");
+        bgfx::ShaderHandle fsh = createShader(fshader, "fshader");
 
         bgfx::ProgramHandle program = bgfx::createProgram(vsh, fsh, true);
+
+        asc::Camera camera{{0.0f, 0.0f, -5.0f}, 0.0f, 0.0f, 0.0f};
+
+        MouseState mouse_state = mouseState();
+        asc::CameraControl camera_control{};
+        asc::CameraProperties camera_props{};
+        camera_props.rotate_speed = 0.015f;
+        camera_props.translate_speed = 1.0f;
+
+        auto prev = std::chrono::steady_clock::now();
 
         for (bool quit = false; !quit;) {
             SDL_Event currentEvent;
             while (SDL_PollEvent(&currentEvent) != 0) {
+                updateCameraControlKeyboardSdl(
+                    currentEvent, camera_control);
                 ImGui_ImplSDL2_ProcessEvent(&currentEvent);
                 if (currentEvent.type == SDL_QUIT) {
                     quit = true;
@@ -128,7 +145,18 @@ int main(int argc, char** argv)
 
             ImGui::Render();
 
-            camera_t camera{{0.0f, 0.0f, -5.0f}, 0.0f, 0.0f};
+            updateCameraControlMouseSdl(
+                camera_control, camera_props, mouse_state);
+
+            auto now = std::chrono::steady_clock::now();
+            auto delta = now - prev;
+            prev = now;
+
+            float dt = fp_seconds(delta).count();
+
+            asc::update_camera(
+                camera, camera_control, camera_props, dt,
+                asc::Handedness::Left);
 
             float view[16];
             as::mat::to_arr(camera.view(), view);
