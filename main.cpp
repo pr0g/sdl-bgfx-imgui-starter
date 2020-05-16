@@ -68,15 +68,21 @@ int main(int argc, char** argv)
             return 1;
         }
 
+        bgfx::renderFrame(); // single threaded mode
+
         bgfx::PlatformData pd{};
+#if BX_PLATFORM_WINDOWS
         pd.nwh = wmi.info.win.window;
-        bgfx::setPlatformData(pd);
+#elif BX_PLATFORM_OSX
+        pd.nwh = wmi.info.cocoa.window;
+#endif // BX_PLATFORM_WINDOWS ? BX_PLATFORM_OSX
 
         bgfx::Init bgfxInit;
         bgfxInit.type = bgfx::RendererType::Count; // auto choose renderer
         bgfxInit.resolution.width = width;
         bgfxInit.resolution.height = height;
         bgfxInit.resolution.reset = BGFX_RESET_VSYNC;
+        bgfxInit.platformData = pd;
         bgfx::init(bgfxInit);
 
         bgfx::setViewClear(
@@ -87,7 +93,11 @@ int main(int argc, char** argv)
         ImGuiIO& io = ImGui::GetIO();
 
         ImGui_Implbgfx_Init(255);
+#if BX_PLATFORM_WINDOWS
         ImGui_ImplSDL2_InitForD3D(window);
+#elif BX_PLATFORM_OSX
+        ImGui_ImplSDL2_InitForMetal(window);
+#endif // BX_PLATFORM_WINDOWS ? BX_PLATFORM_OSX
 
         bgfx::VertexLayout posColVertLayout;
         posColVertLayout.begin()
@@ -170,8 +180,7 @@ int main(int argc, char** argv)
 
             bgfx::setViewTransform(0, view, proj);
 
-            as::mat4_t rot = as::mat4::from_mat3(as::mat3::rotation_zxy(
-                as::deg_to_rad(45.0f), 0.0f, as::deg_to_rad(45.0f)));
+            as::mat4_t rot = as::mat4_t::identity();
 
             float model[16];
             as::mat::to_arr(rot, model);

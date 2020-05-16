@@ -2,9 +2,11 @@
 
 ## steps
 
-- download and unzip [SDL2](https://www.libsdl.org/release/SDL2-2.0.12.zip) to third-party/libs
-- `cd` to root SDL2 folder
+- download and unzip [SDL2](https://www.libsdl.org/release/SDL2-2.0.12.zip) to `third-party/libs`
+- `cd` to root `SDL2` folder
 - if on Windows - `"C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars64.bat"`
+- if on macOS add `-DCMAKE_C_COMPILER=<path/to/c/compiler> -DCMAKE_CXX_COMPILER=<path/to/c++/compiler>`
+- e.g. `/usr/bin/clang`, `/usr/bin/clang++`, `/usr/local/bin/gcc`, `/usr/local/bin/g++` etc..
 - `cmake -S . -B build -G Ninja -DCMAKE_INSTALL_PREFIX=./install -DCMAKE_BUILD_TYPE=Debug`
 - `cmake --build build --target install`
 - `cmake -S . -B build -G Ninja -DCMAKE_INSTALL_PREFIX=./install -DCMAKE_BUILD_TYPE=RelWithDebInfo`
