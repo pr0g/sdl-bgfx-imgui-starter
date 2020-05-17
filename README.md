@@ -42,7 +42,7 @@ Shaders for `bgfx` also must be compiled to be loaded by the application. The st
 >
 > The added benefit of `Ninja` is it also supports creating a `compile_commands.json` file (by providing `-DCMAKE_EXPORT_COMPILE_COMMANDS=ON` to the `CMake` configure command). This is useful for many different reasons, one of the highlights being offering perfect intellisense for VSCode 😁.
 >
-> Finally all listed `CMake` configure commands specify `-DCMAKE_BUILD_TYPE=Debug` but when building the dependencies you can also use `Release` or `RelWithDebInfo` to get an optimized build.
+> Finally all listed `CMake` configure commands specify `-DCMAKE_BUILD_TYPE=Debug` but when building the dependencies you can also use `Release` or `RelWithDebInfo` to get an optimized build. All dependencies make use of `CMAKE_DEBUG_POSTFIX` which means all built libraries get a `d` suffix (the convention) appended, so you can build and install both Debug and Release libraries to the same location.
 
 ### Windows
 
