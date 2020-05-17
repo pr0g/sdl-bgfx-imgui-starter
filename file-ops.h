@@ -1,9 +1,14 @@
 #pragma once
 
-#include "bgfx/bgfx.h"
-
 #include <fstream>
 #include <iostream>
+
+// stream string operations derived from:
+// Optimized C++ by Kurt Guntheroth (O’Reilly).
+// Copyright 2016 Kurt Guntheroth, 978-1-491-92206-4
+
+namespace fileops
+{
 
 inline static std::streamoff stream_size(std::istream& file)
 {
@@ -44,3 +49,5 @@ inline bool read_file(const std::string& filename, std::string& fileContents)
 
     return success;
 }
+
+} // namespace fileops
