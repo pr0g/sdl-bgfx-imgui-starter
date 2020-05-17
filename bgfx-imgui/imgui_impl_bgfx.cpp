@@ -1,3 +1,6 @@
+// Derived from this Gist by Richard Gale:
+//     https://gist.github.com/RichardGale/6e2b74bc42b3005e08397236e4be0fd0
+
 // ImGui BFFX binding
 // In this binding, ImTextureID is used to store an OpenGL 'GLuint' texture
 // identifier. Read the FAQ about ImTextureID in imgui.cpp.

@@ -1,3 +1,6 @@
+// Derived from this Gist by Richard Gale:
+//     https://gist.github.com/RichardGale/6e2b74bc42b3005e08397236e4be0fd0
+
 // ImGui BGFX binding
 
 // You can copy and use unmodified imgui_impl_* files in your project. See
