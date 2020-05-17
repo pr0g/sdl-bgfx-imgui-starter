@@ -11,6 +11,7 @@ BraceWrapping:
     AfterNamespace: true
     AfterStruct: true
     AfterClass: true
+    AfterEnum: true
     AfterFunction: true
     SplitEmptyFunction: true
 ColumnLimit: 80
@@ -25,4 +26,5 @@ Cpp11BracedListStyle: true
 IndentCaseLabels: true
 SortIncludes: true
 IncludeBlocks: Preserve
+FixNamespaceComments: true
 ...

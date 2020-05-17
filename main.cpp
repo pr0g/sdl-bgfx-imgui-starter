@@ -1,19 +1,12 @@
 #include "SDL.h"
 #include "SDL_syswm.h"
-#include "as/as-math-ops.hpp"
-#include "as/as-view.hpp"
-#include "as-camera/as-camera-controller.hpp"
-#include "sdl-as-camera/sdl-as-camera.h"
 #include "bgfx-imgui/imgui_impl_bgfx.h"
 #include "bgfx/bgfx.h"
 #include "bgfx/platform.h"
+#include "bx/math.h"
 #include "file-ops.h"
 #include "imgui.h"
 #include "sdl-imgui/imgui_impl_sdl.h"
-
-#include <chrono>
-
-using fp_seconds = std::chrono::duration<float, std::chrono::seconds::period>;
 
 struct PosColorVertex
 {
@@ -125,21 +118,16 @@ int main(int argc, char** argv)
 
         bgfx::ProgramHandle program = bgfx::createProgram(vsh, fsh, true);
 
-        asc::Camera camera{{0.0f, 0.0f, -5.0f}, 0.0f, 0.0f, 0.0f};
+        float cam_pitch = 0.0f;
+        float cam_yaw = 0.0f;
+        float rot_scale = 0.01f;
 
-        MouseState mouse_state = mouseState();
-        asc::CameraControl camera_control{};
-        asc::CameraProperties camera_props{};
-        camera_props.rotate_speed = 0.015f;
-        camera_props.translate_speed = 1.0f;
-
-        auto prev = std::chrono::steady_clock::now();
+        int prev_mouse_x = 0;
+        int prev_mouse_y = 0;
 
         for (bool quit = false; !quit;) {
             SDL_Event currentEvent;
             while (SDL_PollEvent(&currentEvent) != 0) {
-                updateCameraControlKeyboardSdl(
-                    currentEvent, camera_control);
                 ImGui_ImplSDL2_ProcessEvent(&currentEvent);
                 if (currentEvent.type == SDL_QUIT) {
                     quit = true;
@@ -149,41 +137,45 @@ int main(int argc, char** argv)
 
             ImGui_Implbgfx_NewFrame();
             ImGui_ImplSDL2_NewFrame(window);
+
             ImGui::NewFrame();
-
-            ImGui::ShowDemoWindow();
-
+            ImGui::ShowDemoWindow(); // your drawing here
             ImGui::Render();
 
-            updateCameraControlMouseSdl(
-                camera_control, camera_props, mouse_state);
+            int mouse_x, mouse_y;
+            const int buttons = SDL_GetGlobalMouseState(&mouse_x, &mouse_y);
+            if ((buttons & SDL_BUTTON(SDL_BUTTON_LEFT)) != 0) {
+                int delta_x = mouse_x - prev_mouse_x;
+                int delta_y = mouse_y - prev_mouse_y;
 
-            auto now = std::chrono::steady_clock::now();
-            auto delta = now - prev;
-            prev = now;
+                cam_yaw += float(-delta_x) * rot_scale;
+                cam_pitch += float(-delta_y) * rot_scale;
+            }
 
-            float dt = fp_seconds(delta).count();
+            prev_mouse_x = mouse_x;
+            prev_mouse_y = mouse_y;
 
-            asc::update_camera(
-                camera, camera_control, camera_props, dt,
-                asc::Handedness::Left);
+            float cam_rotation[16];
+            bx::mtxRotateXYZ(cam_rotation, cam_pitch, cam_yaw, 0.0f);
+
+            float cam_translation[16];
+            bx::mtxTranslate(cam_translation, 0.0f, 0.0f, -5.0f);
+
+            float cam_transform[16];
+            bx::mtxMul(cam_transform, cam_translation, cam_rotation);
 
             float view[16];
-            as::mat::to_arr(camera.view(), view);
+            bx::mtxInverse(view, cam_transform);
 
             float proj[16];
-            as::mat::to_arr(
-                as::view::perspective_d3d_lh(
-                    as::deg_to_rad(60.0f), float(width) / float(height), 0.1f,
-                    100.0f),
-                proj);
+            bx::mtxProj(
+                proj, 60.0f, float(width) / float(height), 0.1f, 100.0f,
+                bgfx::getCaps()->homogeneousDepth);
 
             bgfx::setViewTransform(0, view, proj);
 
-            as::mat4_t rot = as::mat4_t::identity();
-
             float model[16];
-            as::mat::to_arr(rot, model);
+            bx::mtxIdentity(model);
             bgfx::setTransform(model);
 
             bgfx::setVertexBuffer(0, vbh);
