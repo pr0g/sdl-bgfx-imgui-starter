@@ -142,6 +142,7 @@ int main(int argc, char** argv)
             ImGui::ShowDemoWindow(); // your drawing here
             ImGui::Render();
 
+            // simple input code for orbit camera
             int mouse_x, mouse_y;
             const int buttons = SDL_GetGlobalMouseState(&mouse_x, &mouse_y);
             if ((buttons & SDL_BUTTON(SDL_BUTTON_LEFT)) != 0) {
