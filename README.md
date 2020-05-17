@@ -2,7 +2,9 @@
 
 The idea behind this repo is for it to be used as a minimal starting point for development of a game, demo or experiment.
 
-It utilizes `SDL2` for the windowing system, `bgfx` for the graphics library and `Dear ImGui` for the user interface.
+It utilizes `SDL2` for the windowing system, `bgfx` (by [@bkaradzic](https://twitter.com/bkaradzic)) for the graphics library and `Dear ImGui` (by [@ocornut](https://twitter.com/ocornut)) for the user interface.
+
+The code in `main.cpp` is derived from two excellent `bgfx` tutorials ([hello-bgfx (tutorial)](https://dev.to/pperon/hello-bgfx-4dka) by [Phil Peron](https://twitter.com/pperon) and [bgfx-ubuntu(tutorial)](https://www.sandeepnambiar.com/getting-started-with-bgfx/)) by [Sandeep Nambiar](https://twitter.com/_sandeepnambiar). I highly recommend checking them out!
 
 This repo does not directly include any of these libraries but contains instructions on how to download and install them so this project can use them.
 
@@ -32,6 +34,8 @@ To achieve this `CMake` must be installed on your system (repo tested with `3.15
 
 Please see the third-party [README](third-party/README.md) for full instructions on how to do this.
 
+> Note: `third-party/libs` is added to the `.gitignore` file to ensure the dependencies aren't added to the project.
+
 ## Build Instructions
 
 Once all third party libraries have been downloaded and installed, follow these build instructions to compile the repo (linking to the previously built dependencies).
@@ -42,7 +46,9 @@ Shaders for `bgfx` also must be compiled to be loaded by the application. The st
 >
 > The added benefit of `Ninja` is it also supports creating a `compile_commands.json` file (by providing `-DCMAKE_EXPORT_COMPILE_COMMANDS=ON` to the `CMake` configure command). This is useful for many different reasons, one of the highlights being offering perfect intellisense for VSCode 😁.
 >
-> Finally all listed `CMake` configure commands specify `-DCMAKE_BUILD_TYPE=Debug` but when building the dependencies you can also use `Release` or `RelWithDebInfo` to get an optimized build. All dependencies make use of `CMAKE_DEBUG_POSTFIX` which means all built libraries get a `d` suffix (the convention) appended, so you can build and install both Debug and Release libraries to the same location.
+> Finally all listed `CMake` configure commands specify `-DCMAKE_BUILD_TYPE=Debug` but when building the dependencies you can also use `Release` or `RelWithDebInfo` to get an optimized build. All dependencies make use of `CMAKE_DEBUG_POSTFIX` which means all built libraries get a '`d`' suffix (the convention) appended, so you can build and install both Debug and Release libraries to the same location.
+>
+>__Attn:__ If you build the dependencies in `Debug` and then try and build the starter project in `Release` (or vice versa) you're likely to get link errors.
 
 ### Windows
 
@@ -92,3 +98,12 @@ While getting this project setup I discovered a number of excellent resources I'
 - [minimal-bgfx](https://github.com/jpcy/bgfx-minimal-example) - a similar repo to this one only using `premake` and git submodules instead of `CMake` and with no `imgui`.
 - [dear-imgui](https://github.com/ocornut/imgui) - `Dear ImGui` main repo - lots of documentation and examples are available there
 - [cmakefied](https://github.com/tamaskenez/cmakefied) - a complimentary repo to add CMake support to `imgui` (used by this repo)
+
+## Special Thanks
+
+- [Бранимир Караџић (@bkaradzic)](https://twitter.com/bkaradzic) for the excellent [bgfx](https://github.com/bkaradzic/bgfx)
+- [Omar Cornut (@ocornut)](https://twitter.com/ocornut) for the brilliant [Dear Imgui](https://github.com/ocornut/imgui)
+- [Widberg/MissingBitStudios](https://github.com/widberg) for the `bgfx` CMake support
+- [Tamas Kenez](https://github.com/tamaskenez) for the `Dear Imgui` CMake support
+- [Richard Gale (@richardg4)](https://twitter.com/richardg4) for the `bgfx` implementation for `Dear ImGui`
+- [Phil Peron (@pperon)](https://twitter.com/pperon) and [Sandeep Nambiar (@_sandeepnambiar)](https://twitter.com/_sandeepnambiar) for the great `bgfx` setup tutorials.
