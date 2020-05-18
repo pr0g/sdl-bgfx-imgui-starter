@@ -187,6 +187,10 @@ int main(int argc, char** argv)
             bgfx::frame();
         }
 
+        bgfx::destroy(vbh);
+        bgfx::destroy(ibh);
+        bgfx::destroy(program);
+
         ImGui_ImplSDL2_Shutdown();
         ImGui_Implbgfx_Shutdown();
 
