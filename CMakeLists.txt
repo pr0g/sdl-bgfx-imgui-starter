@@ -22,6 +22,9 @@ target_link_libraries(
     imgui::imgui
 )
 
+set_target_properties(
+    ${PROJECT_NAME} PROPERTIES CXX_STANDARD 11)
+
 if (WIN32)
 # copy the SDL2.dll to the same folder as the executable
 add_custom_command(
