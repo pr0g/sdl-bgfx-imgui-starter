@@ -2,9 +2,9 @@
 
 The idea behind this repo is for it to be used as a minimal starting point for development of a game, demo or experiment.
 
-It utilizes `SDL2` for the windowing system, `bgfx` (by [@bkaradzic](https://twitter.com/bkaradzic)) for the graphics library and `Dear ImGui` (by [@ocornut](https://twitter.com/ocornut)) for the user interface.
+It utilizes [SDL2](https://www.libsdl.org/index.php) for the windowing system, [bgfx](https://github.com/bkaradzic/bgfx) (by [@bkaradzic](https://twitter.com/bkaradzic)) for the graphics library and [Dear ImGui](https://github.com/ocornut/imgui) (by [@ocornut](https://twitter.com/ocornut)) for the user interface.
 
-The code in `main.cpp` is derived from two excellent `bgfx` tutorials ([hello-bgfx (tutorial)](https://dev.to/pperon/hello-bgfx-4dka) by [Phil Peron](https://twitter.com/pperon) and [bgfx-ubuntu(tutorial)](https://www.sandeepnambiar.com/getting-started-with-bgfx/)) by [Sandeep Nambiar](https://twitter.com/_sandeepnambiar). I highly recommend checking them out!
+The code in `main.cpp` is derived from two excellent `bgfx` tutorials ([hello-bgfx](https://dev.to/pperon/hello-bgfx-4dka) by [Phil Peron](https://twitter.com/pperon) and [bgfx-ubuntu](https://www.sandeepnambiar.com/getting-started-with-bgfx/)) by [Sandeep Nambiar](https://twitter.com/_sandeepnambiar). I highly recommend checking them out!
 
 This repo does not directly include any of these libraries but contains instructions on how to download and install them so this project can use them.
 
