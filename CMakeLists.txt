@@ -25,6 +25,11 @@ target_link_libraries(
 set_target_properties(
     ${PROJECT_NAME} PROPERTIES CXX_STANDARD 11)
 
+# required for project when using visual studio generator
+set_target_properties(
+    ${PROJECT_NAME} PROPERTIES
+    VS_DEBUGGER_WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+
 if (WIN32)
 # copy the SDL2.dll to the same folder as the executable
 add_custom_command(
