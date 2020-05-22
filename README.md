@@ -54,6 +54,8 @@ Shaders for `bgfx` also must be compiled to be loaded by the application. The st
 
 #### App - Windows
 
+> Note: `configure.bat` located in the root provides the first line below
+
 ```bat
 cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Debug -DCMAKE_PREFIX_PATH=%cd%/third-party/libs/SDL2-2.0.12/install;%cd%/third-party/libs/bgfx/install;%cd%/third-party/libs/imgui/install -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
 
@@ -71,6 +73,8 @@ third-party\libs\bgfx\install\bin\shaderc.exe -f shader\f_simple.sc -o shader\f_
 ### macOS
 
 #### App - macOS
+
+> Note: `configure.sh` located in the root provides the first line below
 
 ```bash
 cmake -S . -B build -DCMAKE_CXX_COMPILER=/usr/bin/clang++ -DCMAKE_PREFIX_PATH="$(pwd)/third-party/libs/SDL2-2.0.12/install;$(pwd)/third-party/libs/imgui/install;$(pwd)/third-party/libs/bgfx/install" -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
