@@ -1,4 +1,4 @@
-build/
+build*/
 install/
 third-party/libs/*
 !third-party/libs/README.md
