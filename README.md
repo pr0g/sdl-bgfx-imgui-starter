@@ -1,5 +1,7 @@
 # sdl-bgfx-imgui-starter
 
+![starter](starter.png)
+
 The idea behind this repo is for it to be used as a minimal starting point for development of a game, demo or experiment.
 
 It utilizes [SDL2](https://www.libsdl.org/index.php) for the windowing system, [bgfx](https://github.com/bkaradzic/bgfx) (by [@bkaradzic](https://twitter.com/bkaradzic)) for the graphics library and [Dear ImGui](https://github.com/ocornut/imgui) (by [@ocornut](https://twitter.com/ocornut)) for the user interface.
