@@ -17,6 +17,10 @@
 - You may need to add `-DCMAKE_C_COMPILER=<path/to/c/compiler> -DCMAKE_CXX_COMPILER=<path/to/c++/compiler>` when running the `CMake` commands if a valid compiler cannot be found by `CMake`.
   - Most likely locations include: `/usr/bin/clang`, `/usr/bin/clang++`, `/usr/local/bin/gcc`, `/usr/local/bin/g++` etc..
 
+#### Both
+
+You'll likely notice that the CMake build and install commands for each library are all identical and can get quite tedious to copy/paste repeatedly. Included in this folder are two scripts (one for Windows and one for macOS), `build_and_install.<bat/sh>`. Copy one or other of these scripts into the root folder of each library and run them to build and install a debug and release version of each library.
+
 ### SDL
 
 - Download and unzip [SDL2](https://www.libsdl.org/release/SDL2-2.0.12.zip) to `third-party/libs`
@@ -26,8 +30,10 @@
 
 ```bash
 # build and install SDL2 to third-party/libs/SDL2-2.0.12/install
-cmake -S . -B build -G Ninja -DCMAKE_INSTALL_PREFIX=./install -DCMAKE_BUILD_TYPE=Debug
-cmake --build build --target install
+cmake -S . -B build/debug -G Ninja -DCMAKE_INSTALL_PREFIX=./install -DCMAKE_BUILD_TYPE=Debug
+cmake -S . -B build/release -G Ninja -DCMAKE_INSTALL_PREFIX=./install -DCMAKE_BUILD_TYPE=RelWithDebInfo
+cmake --build build/debug --target install
+cmake --build build/release --target install
 ```
 
 ### bgfx
@@ -41,8 +47,10 @@ git submodule init
 git submodule update
 
 # build and install bgfx to third-party/libs/bgfx/install
-cmake -S . -B build -G Ninja -DCMAKE_INSTALL_PREFIX=./install -DCMAKE_BUILD_TYPE=Debug
-cmake --build build --target install
+cmake -S . -B build/debug -G Ninja -DCMAKE_INSTALL_PREFIX=./install -DCMAKE_BUILD_TYPE=Debug
+cmake -S . -B build/release -G Ninja -DCMAKE_INSTALL_PREFIX=./install -DCMAKE_BUILD_TYPE=RelWithDebInfo
+cmake --build build/debug --target install
+cmake --build build/release --target install
 ```
 
 ### Dear ImGui
@@ -59,8 +67,10 @@ git clone https://github.com/pr0g/cmakefied .
 cd ../imgui
 
 # build and install Dear ImGui to third-party/libs/imgui/install
-cmake -S . -B build -G Ninja -DCMAKE_INSTALL_PREFIX=./install -DCMAKE_BUILD_TYPE=Debug
-cmake --build build --target install
+cmake -S . -B build/debug -G Ninja -DCMAKE_INSTALL_PREFIX=./install -DCMAKE_BUILD_TYPE=Debug
+cmake -S . -B build/release -G Ninja -DCMAKE_INSTALL_PREFIX=./install -DCMAKE_BUILD_TYPE=RelWithDebInfo
+cmake --build build/debug --target install
+cmake --build build/release --target install
 ```
 
 ## Wrap-Up
