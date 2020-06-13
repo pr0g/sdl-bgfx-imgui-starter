@@ -70,13 +70,13 @@ int main(int argc, char** argv)
         pd.nwh = wmi.info.cocoa.window;
 #endif // BX_PLATFORM_WINDOWS ? BX_PLATFORM_OSX
 
-        bgfx::Init bgfxInit;
-        bgfxInit.type = bgfx::RendererType::Count; // auto choose renderer
-        bgfxInit.resolution.width = width;
-        bgfxInit.resolution.height = height;
-        bgfxInit.resolution.reset = BGFX_RESET_VSYNC;
-        bgfxInit.platformData = pd;
-        bgfx::init(bgfxInit);
+        bgfx::Init bgfx_init;
+        bgfx_init.type = bgfx::RendererType::Count; // auto choose renderer
+        bgfx_init.resolution.width = width;
+        bgfx_init.resolution.height = height;
+        bgfx_init.resolution.reset = BGFX_RESET_VSYNC;
+        bgfx_init.platformData = pd;
+        bgfx::init(bgfx_init);
 
         bgfx::setViewClear(
             0, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x6495EDFF, 1.0f, 0);
@@ -92,14 +92,14 @@ int main(int argc, char** argv)
         ImGui_ImplSDL2_InitForMetal(window);
 #endif // BX_PLATFORM_WINDOWS ? BX_PLATFORM_OSX
 
-        bgfx::VertexLayout posColVertLayout;
-        posColVertLayout.begin()
+        bgfx::VertexLayout pos_col_vert_layout;
+        pos_col_vert_layout.begin()
             .add(bgfx::Attrib::Position, 3, bgfx::AttribType::Float)
             .add(bgfx::Attrib::Color0, 4, bgfx::AttribType::Uint8, true)
             .end();
         bgfx::VertexBufferHandle vbh = bgfx::createVertexBuffer(
             bgfx::makeRef(cube_vertices, sizeof(cube_vertices)),
-            posColVertLayout);
+            pos_col_vert_layout);
         bgfx::IndexBufferHandle ibh = bgfx::createIndexBuffer(
             bgfx::makeRef(cube_tri_list, sizeof(cube_tri_list)));
 
