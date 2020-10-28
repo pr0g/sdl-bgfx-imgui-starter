@@ -28,10 +28,10 @@ static bgfx::ProgramHandle g_ShaderHandle = BGFX_INVALID_HANDLE;
 static bgfx::UniformHandle g_AttribLocationTex = BGFX_INVALID_HANDLE;
 static bgfx::VertexLayout g_VertexLayout;
 
-// This is the main rendering function that you have to implement and provide to
-// ImGui (via setting up 'RenderDrawListsFn' in the ImGuiIO structure) If text
-// or lines are blurry when integrating ImGui in your engine:
-// - in your Render function, try translating your projection matrix by
+// This is the main rendering function that you have to implement and call after
+// ImGui::Render(). Pass ImGui::GetDrawData() to this function.
+// Note: If text or lines are blurry when integrating ImGui into your engine,
+// in your Render function, try translating your projection matrix by
 // (0.5f,0.5f) or (0.375f,0.375f)
 void ImGui_Implbgfx_RenderDrawLists(ImDrawData* draw_data)
 {
@@ -184,9 +184,6 @@ void ImGui_Implbgfx_Init(int view)
 {
     g_View = (uint8_t)(view & 0xff);
     ImGuiIO& io = ImGui::GetIO();
-    // Alternatively you can set this to NULL and call ImGui::GetDrawData()
-    // after ImGui::Render() to get the same ImDrawData pointer.
-    io.RenderDrawListsFn = ImGui_Implbgfx_RenderDrawLists;
 }
 
 void ImGui_Implbgfx_Shutdown()

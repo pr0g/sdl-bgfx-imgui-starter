@@ -141,6 +141,7 @@ int main(int argc, char** argv)
             ImGui::NewFrame();
             ImGui::ShowDemoWindow(); // your drawing here
             ImGui::Render();
+            ImGui_Implbgfx_RenderDrawLists(ImGui::GetDrawData());
 
             // simple input code for orbit camera
             int mouse_x, mouse_y;
