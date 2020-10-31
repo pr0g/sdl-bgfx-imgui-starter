@@ -5,9 +5,10 @@ project(third-party)
 include(ExternalProject)
 
 ExternalProject_Add(
-    SDL2 
+    SDL2
     URL https://www.libsdl.org/release/SDL2-2.0.12.tar.gz
     URL_HASH MD5=783b6f2df8ff02b19bb5ce492b99c8ff
+    CMAKE_GENERATOR Ninja
     BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR}/SDL2/build/${CMAKE_BUILD_TYPE}
     INSTALL_DIR ${CMAKE_CURRENT_BINARY_DIR}
     CMAKE_ARGS -D CMAKE_INSTALL_PREFIX=<INSTALL_DIR>
@@ -16,15 +17,23 @@ ExternalProject_Add(
 ExternalProject_Add(
     bgfx
     GIT_REPOSITORY https://github.com/pr0g/bgfx.cmake.git
+    GIT_SHALLOW 1
+    CMAKE_GENERATOR Ninja
     BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR}/bgfx/build/${CMAKE_BUILD_TYPE}
     INSTALL_DIR ${CMAKE_CURRENT_BINARY_DIR}
     CMAKE_ARGS -D CMAKE_INSTALL_PREFIX=<INSTALL_DIR>
-               -D CMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE})
+               -D CMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
+               -D BGFX_BUILD_EXAMPLES=OFF)
 
 ExternalProject_Add(
     cmakefied
     GIT_REPOSITORY https://github.com/pr0g/cmakefied.git
+    GIT_SHALLOW 1
     INSTALL_DIR ${CMAKE_CURRENT_BINARY_DIR}
-    CONFIGURE_COMMAND <SOURCE_DIR>/git-clone.sh imgui COMMAND cmake -S <DOWNLOAD_DIR>/imgui -B build/${CMAKE_BUILD_TYPE} -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR> -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
+    CONFIGURE_COMMAND sh <SOURCE_DIR>/git-clone.sh imgui
+    COMMAND cmake -S <DOWNLOAD_DIR>/imgui -B build/${CMAKE_BUILD_TYPE} -G Ninja
+            -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>
+            -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
     BUILD_COMMAND cmake --build <BINARY_DIR>/build/${CMAKE_BUILD_TYPE}
-    INSTALL_COMMAND cmake --install <BINARY_DIR>/build/${CMAKE_BUILD_TYPE})
+                  --target install
+    INSTALL_COMMAND "")
