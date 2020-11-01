@@ -183,7 +183,6 @@ void ImGui_Implbgfx_InvalidateDeviceObjects()
 void ImGui_Implbgfx_Init(int view)
 {
     g_View = (uint8_t)(view & 0xff);
-    ImGuiIO& io = ImGui::GetIO();
 }
 
 void ImGui_Implbgfx_Shutdown()
