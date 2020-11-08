@@ -6,95 +6,59 @@ The idea behind this repo is for it to be used as a minimal starting point for d
 
 It utilizes [SDL2](https://www.libsdl.org/index.php) for the windowing system, [bgfx](https://github.com/bkaradzic/bgfx) (by [@bkaradzic](https://twitter.com/bkaradzic)) for the graphics library and [Dear ImGui](https://github.com/ocornut/imgui) (by [@ocornut](https://twitter.com/ocornut)) for the user interface.
 
-The code in `main.cpp` is derived from two excellent `bgfx` tutorials ([hello-bgfx](https://dev.to/pperon/hello-bgfx-4dka) by [Phil Peron](https://twitter.com/pperon) and [bgfx-ubuntu](https://www.sandeepnambiar.com/getting-started-with-bgfx/)) by [Sandeep Nambiar](https://twitter.com/_sandeepnambiar). I highly recommend checking them out!
+The code in `main.cpp` is derived from two excellent `bgfx` tutorials ([hello-bgfx](https://dev.to/pperon/hello-bgfx-4dka) by [Phil Peron](https://twitter.com/pperon) and [bgfx-ubuntu](https://www.sandeepnambiar.com/getting-started-with-bgfx/) by [Sandeep Nambiar](https://twitter.com/_sandeepnambiar)). I highly recommend checking them out!
 
-This repo does not directly include any of these libraries but contains instructions on how to download and install them so this project can use them.
+This repo does not directly include any of these libraries but contains ~~instructions on how to download and install them~~ _a CMake script to download and install them_ so this project can use them.
 
->  __Warning:__ There is a little bit of setup required (please see the prerequisites below) but once you're setup you should be good to go.
->
-> In future batch/shell scripts will likely be provided to automate the initial bootstrap.
+>__Warning:__ There is a little bit of setup required. Please see the prerequisites below.
 
-## Getting Started
+## Prerequisites
 
-Before doing anything else create a directory to hold the repo
+To begin with create a directory to hold the repo:
 
 ```bat
 mkdir sdl-bgfx-imgui-starter && cd sdl-bgfx-imgui-starter
 ```
 
-Then clone the repo
+Then clone the repo:
 
 ```bash
 git clone https://github.com/pr0g/sdl-bgfx-imgui-starter.git .
 ```
 
-## Prerequisites
+Before attempting to build this project __all third party dependencies__ (`SDL`, `bgfx` and `imgui`) must be __downloaded and installed__ (CMake now takes care of this with `ExternalProject_Add`). To achieve this `CMake` must be installed on your system (repo tested with CMake version `3.15`).
 
-Before attempting to build this project all third party dependencies (`SDL`, `bgfx` and `imgui`) must be downloaded and installed. These will be self contained in the repo and are not installed to the system.
+> Note: The libraries are self contained in the repo and are not installed to the system.
 
-To achieve this `CMake` must be installed on your system (repo tested with `3.15`).
+Please see the third-party [__README__](third-party/README.md) for full instructions on how to do this.
 
-Please see the third-party [README](third-party/README.md) for full instructions on how to do this.
-
-> Note: `third-party/libs` is added to the `.gitignore` file to ensure the dependencies aren't added to the project.
+> Do __not__ proceed to __Build Instructions__ until you've done this.
 
 ## Build Instructions
 
-Once all third party libraries have been downloaded and installed, follow these build instructions to compile the repo (linking to the previously built dependencies).
+Once all third party libraries have been downloaded and installed, follow these build instructions to compile the repo.
 
-Shaders for `bgfx` also must be compiled to be loaded by the application. The starter has an incredibly simple shader supporting vertex colours.
+Shaders for `bgfx` also must be compiled to be loaded by the application (the starter has an incredibly simple shader supporting vertex colours).
 
-> __Info:__ `Ninja` was chosen as the generator for `CMake` as it's consistent across both _macOS_ and _Windows_ (the _Visual Studio/MSVC_ generator supports multiple configurations which is cool but just makes things more complicated when dealing with cross platform commands).
->
-> The added benefit of `Ninja` is it also supports creating a `compile_commands.json` file (by providing `-DCMAKE_EXPORT_COMPILE_COMMANDS=ON` to the `CMake` configure command). This is useful for many different reasons, one of the highlights being offering perfect intellisense for VSCode 😁.
->
-> Finally all listed `CMake` configure commands specify `-DCMAKE_BUILD_TYPE=Debug` but when building the dependencies you can also use `Release` or `RelWithDebInfo` to get an optimized build. All dependencies make use of `CMAKE_DEBUG_POSTFIX` which means all built libraries get a '`d`' suffix (the convention) appended, so you can build and install both Debug and Release libraries to the same location.
->
->__Attn:__ If you build the dependencies in `Debug` and then try and build the starter project in `Release` (or vice versa) you're likely to get link errors.
+> __Info:__ A `configure.bat` and `configure.sh` file are provided (mainly as an exmaple) to run the CMake configure commands. `Ninja` was chosen as the generator for these as it's consistent across both _macOS_ and _Windows_, any generator should work though. There's also `configure-vs.bat` for generating a Visual Studio solution.
 
 ### Windows
 
-#### App - Windows
-
-> Note: `configure.bat` located in the root provides the first line below
-
-```bat
-cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Debug -DCMAKE_PREFIX_PATH=%cd%/third-party/libs/SDL2-2.0.12/install;%cd%/third-party/libs/bgfx/install;%cd%/third-party/libs/imgui/install -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
-
-cmake --build build
-```
-
-#### Shaders - Windows
-
-```bat
-third-party\libs\bgfx\install\bin\shaderc.exe -f shader\v_simple.sc -o shader\v_simple.bin --platform windows --type vertex --verbose -i ./ -p vs_5_0
-
-third-party\libs\bgfx\install\bin\shaderc.exe -f shader\f_simple.sc -o shader\f_simple.bin --platform windows --type fragment --verbose -i ./ -p ps_5_0
-```
+- Run `./configure.bat` located in the root directory to generate the build files required for the project.
+- Run `cmake --build build/debug` and/or `cmake --build build/release` to compile the project.
+- Run `./compile-shaders.bat` located in the root directory to build the shaders.
+- Launch the application by running `./build/debug/sdl-bgfx-imgui-starter` or `./build/release/sdl-bgfx-imgui-starter`.
 
 ### macOS
 
-#### App - macOS
-
-> Note: `configure.sh` located in the root provides the first line below
-
-```bash
-cmake -S . -B build -DCMAKE_CXX_COMPILER=/usr/bin/clang++ -DCMAKE_PREFIX_PATH="$(pwd)/third-party/libs/SDL2-2.0.12/install;$(pwd)/third-party/libs/imgui/install;$(pwd)/third-party/libs/bgfx/install" -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
-
-cmake --build build
-```
-
-#### Shaders - macOS
-
-```bash
-./third-party/libs/bgfx/install/bin/shaderc -f shader/v_simple.sc -o shader/v_simple.bin --platform osx --type vertex --verbose -i ./ -p metal
-
-./third-party/libs/bgfx/install/bin/shaderc -f shader/f_simple.sc -o shader/f_simple.bin --platform osx --type fragment --verbose -i ./ -p metal
-```
+- Run `./configure.sh` located in the root directory to generate the build files required for the project.
+- Run `cmake --build build/debug` and/or `cmake --build build/release` to compile the project.
+- Run `./compile-shaders.sh` located in the root directory to build the shaders.
+- Launch the application by running `build\debug\sdl-bgfx-imgui-starter.exe` or `build\release\sdl-bgfx-imgui-starter.exe`.
 
 ## Resources
 
-While getting this project setup I discovered a number of excellent resources I'd highly recommend checking them out to learn more about `bgfx` and `Dear ImGui`.
+While getting this project setup I discovered a number of excellent resources. I'd highly recommend checking them out to learn more about `bgfx` and `Dear ImGui`.
 
 - [bgfx](https://github.com/bkaradzic/bgfx) - `bgfx` main repo
 - [bgfx-docs](https://bkaradzic.github.io/bgfx/index.html) - extensive docs covering much of `bgfx`'s API
