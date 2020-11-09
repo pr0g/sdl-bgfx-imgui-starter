@@ -29,11 +29,15 @@ cmake -S . -B build
 
 It's fine not to specify a generator, any should work (and the `CMakeLists.txt` file should handle either single or multi-config generators).
 
+> Note: For single-config generators the above will configure the libraries to build in `Debug`. To build them in `Release` (after performing the step listed below to build the libraries in `Debug`), run `cmake -S . -B build -DCMAKE_BUILD_TYPE=Release`, and then invoke `cmake --build build` again.
+
 Then run:
 
 ```cmake
 cmake --build build
 ```
+
+> Note: For single-config generators (Make, Ninja) this will build the configuration provided by `-DCMAKE_BUILD_TYPE` (`Debug` by default if omitted). For multi-config generators (e.g. Visual Studio) `cmake --build build` will by default build the `Debug` configuration. To build `Release`, use `cmake --build build --config Release`.
 
 It might take a little while but behind the scenes `CMake` will go away and download, configure, build and install `SDL`, `bgfx` and `Dear ImGui`.
 
