@@ -3,7 +3,7 @@
 # compile shaders
 
 # simple shader
-./third-party/build/bin/shaderc  \
+./third-party/build/bin/shaderc \
 -f shader/v_simple.sc -o shader/v_simple.bin  \
 --platform osx --type vertex --verbose -i ./ -p metal
 
