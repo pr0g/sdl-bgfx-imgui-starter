@@ -40,21 +40,28 @@ Once all third party libraries have been downloaded and installed, follow these 
 
 Shaders for `bgfx` also must be compiled to be loaded by the application (the starter has an incredibly simple shader supporting vertex colours).
 
-> __Info:__ A `configure.bat` and `configure.sh` file are provided (mainly as an exmaple) to run the CMake configure commands. `Ninja` was chosen as the generator for these as it's consistent across both _macOS_ and _Windows_, any generator should work though. There's also `configure-vs.bat` for generating a Visual Studio solution.
+> __Info:__ A `configure.bat` and `configure.sh` file are provided (mainly as an exmaple) to run the CMake configure commands. `Ninja` was chosen as the generator for these as it's consistent across both _macOS_, _Linux_ and _Windows_, any generator should work though. There's also `configure-vs.bat` for generating a Visual Studio solution.
 
 ### Windows
 
 - Run `./configure.bat` located in the root directory to generate the build files required for the project.
 - Run `cmake --build build/debug` and/or `cmake --build build/release` to compile the project.
-- Run `./compile-shaders.bat` located in the root directory to build the shaders.
-- Launch the application by running `./build/debug/sdl-bgfx-imgui-starter` or `./build/release/sdl-bgfx-imgui-starter`.
+- Run `./compile-shaders-win.bat` located in the root directory to build the shaders.
+- Launch the application by running `build\debug\sdl-bgfx-imgui-starter.exe` or `build\release\sdl-bgfx-imgui-starter.exe`.
 
 ### macOS
 
 - Run `./configure.sh` located in the root directory to generate the build files required for the project.
 - Run `cmake --build build/debug` and/or `cmake --build build/release` to compile the project.
-- Run `./compile-shaders.sh` located in the root directory to build the shaders.
-- Launch the application by running `build\debug\sdl-bgfx-imgui-starter.exe` or `build\release\sdl-bgfx-imgui-starter.exe`.
+- Run `./compile-shaders-macos.sh` located in the root directory to build the shaders.
+- Launch the application by running `./build/debug/sdl-bgfx-imgui-starter` or `./build/release/sdl-bgfx-imgui-starter`.
+
+### Linux
+
+- Run `./configure.sh` located in the root directory to generate the build files required for the project.
+- Run `cmake --build build/debug` and/or `cmake --build build/release` to compile the project.
+- Run `./compile-shaders-linux.sh` located in the root directory to build the shaders.
+- Launch the application by running `./build/debug/sdl-bgfx-imgui-starter` or `./build/release/sdl-bgfx-imgui-starter`.
 
 ## Resources
 
