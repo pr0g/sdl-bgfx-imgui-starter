@@ -31,7 +31,7 @@ ExternalProject_Add(
     INSTALL_DIR ${CMAKE_CURRENT_BINARY_DIR}
     CMAKE_ARGS ${build_type_arg}
                -D CMAKE_INSTALL_PREFIX=<INSTALL_DIR>
-               -D CMAKE_DEBUG_POSTFIX=d
+               "$<$<CONFIG:Debug>:-DCMAKE_DEBUG_POSTFIX=d>"
                -D BGFX_BUILD_EXAMPLES=OFF)
 
 ExternalProject_Add(
