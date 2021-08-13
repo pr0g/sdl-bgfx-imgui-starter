@@ -8,6 +8,10 @@
 #include "imgui.h"
 #include "sdl-imgui/imgui_impl_sdl.h"
 
+#if BX_PLATFORM_EMSCRIPTEN
+#include "bgfx-emscripten/bgfx_emscripten_utils.hpp"
+#endif // BX_PLATFORM_EMSCRIPTEN
+
 struct PosColorVertex
 {
     float x;
@@ -76,7 +80,7 @@ int main(int argc, char** argv)
     pd.nwh = (void*)(uintptr_t)wmi.info.x11.window;
 #elif BX_PLATFORM_EMSCRIPTEN
     pd.nwh = (void*)"#canvas";
-#endif // BX_PLATFORM_WINDOWS ? BX_PLATFORM_OSX ? BX_PLATFORM_LINUX
+#endif // BX_PLATFORM_WINDOWS ? BX_PLATFORM_OSX ? BX_PLATFORM_LINUX ? BX_PLATFORM_EMSCRIPTEN
 
     bgfx::Init bgfx_init;
     bgfx_init.type = bgfx::RendererType::Count; // auto choose renderer
@@ -114,14 +118,24 @@ int main(int argc, char** argv)
         bgfx::makeRef(cube_tri_list, sizeof(cube_tri_list)));
 
     std::string vshader;
+    std::string fshader;
+#if BX_PLATFORM_EMSCRIPTEN
+    if (!emscriptenutils::fetch_file("shader/v_simple.bin", vshader)) {
+        return 1;
+    }
+
+    if (!emscriptenutils::fetch_file("shader/f_simple.bin", fshader)) {
+        return 1;
+    }
+#else
     if (!fileops::read_file("shader/v_simple.bin", vshader)) {
         return 1;
     }
 
-    std::string fshader;
     if (!fileops::read_file("shader/f_simple.bin", fshader)) {
         return 1;
     }
+#endif // BX_PLATFORM_EMSCRIPTEN
 
     bgfx::ShaderHandle vsh = createShader(vshader, "vshader");
     bgfx::ShaderHandle fsh = createShader(fshader, "fshader");
