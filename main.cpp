@@ -59,6 +59,9 @@ int main(int argc, char** argv)
         return 1;
     }
 
+    bgfx::PlatformData pd{};
+
+#if !BX_PLATFORM_EMSCRIPTEN
     SDL_SysWMinfo wmi;
     SDL_VERSION(&wmi.version);
     if (!SDL_GetWindowWMInfo(window, &wmi)) {
@@ -68,9 +71,6 @@ int main(int argc, char** argv)
         return 1;
     }
 
-    bgfx::renderFrame(); // single threaded mode
-
-    bgfx::PlatformData pd{};
 #if BX_PLATFORM_WINDOWS
     pd.nwh = wmi.info.win.window;
 #elif BX_PLATFORM_OSX
@@ -78,9 +78,12 @@ int main(int argc, char** argv)
 #elif BX_PLATFORM_LINUX
     pd.ndt = wmi.info.x11.display;
     pd.nwh = (void*)(uintptr_t)wmi.info.x11.window;
-#elif BX_PLATFORM_EMSCRIPTEN
+#endif // BX_PLATFORM_WINDOWS ? BX_PLATFORM_OSX ? BX_PLATFORM_LINUX
+#else
     pd.nwh = (void*)"#canvas";
-#endif // BX_PLATFORM_WINDOWS ? BX_PLATFORM_OSX ? BX_PLATFORM_LINUX ? BX_PLATFORM_EMSCRIPTEN
+#endif // BX_PLATFORM_EMSCRIPTEN
+
+    bgfx::renderFrame(); // single threaded mode
 
     bgfx::Init bgfx_init;
     bgfx_init.type = bgfx::RendererType::Count; // auto choose renderer
