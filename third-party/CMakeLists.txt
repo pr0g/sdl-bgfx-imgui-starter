@@ -13,12 +13,19 @@ if (NOT isMultiConfig)
     set(build_type_arg -DCMAKE_BUILD_TYPE=$<CONFIG>)
 endif()
 
+if (${CMAKE_SYSTEM_NAME} STREQUAL "Emscripten")
+    set(THIRD_PARTY_CMAKE_COMMAND emcmake cmake)
+else()
+    set(THIRD_PARTY_CMAKE_COMMAND ${CMAKE_COMMAND})
+endif()
+
 ExternalProject_Add(
     SDL2
     URL https://www.libsdl.org/release/SDL2-2.0.14.tar.gz
     URL_HASH MD5=76ed4e6da9c07bd168b2acd9bfefab1b
     BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR}/SDL2/build/${build_type_dir}
     INSTALL_DIR ${CMAKE_CURRENT_BINARY_DIR}
+    CMAKE_COMMAND ${THIRD_PARTY_CMAKE_COMMAND}
     CMAKE_ARGS ${build_type_arg}
                -D CMAKE_INSTALL_PREFIX=<INSTALL_DIR>)
 
@@ -28,6 +35,7 @@ ExternalProject_Add(
     GIT_TAG        86b4b5a610e8bde42eb259cddc75046bc865929b
     BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR}/bgfx/build/${build_type_dir}
     INSTALL_DIR ${CMAKE_CURRENT_BINARY_DIR}
+    CMAKE_COMMAND ${THIRD_PARTY_CMAKE_COMMAND}
     CMAKE_ARGS ${build_type_arg}
                -D CMAKE_INSTALL_PREFIX=<INSTALL_DIR>
                "$<$<CONFIG:Debug>:-DCMAKE_DEBUG_POSTFIX=d>"
@@ -41,6 +49,7 @@ ExternalProject_Add(
     SOURCE_SUBDIR ../imgui
     BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR}/imgui/build/${build_type_dir}
     INSTALL_DIR ${CMAKE_CURRENT_BINARY_DIR}
+    CMAKE_COMMAND ${THIRD_PARTY_CMAKE_COMMAND}
     CMAKE_ARGS ${build_type_arg}
                -D CMAKE_INSTALL_PREFIX=<INSTALL_DIR>
                -D IMGUI_DISABLE_OBSOLETE_FUNCTIONS=ON)
