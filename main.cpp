@@ -104,7 +104,7 @@ int main(int argc, char** argv)
     ImGui_ImplSDL2_InitForMetal(window);
 #elif BX_PLATFORM_LINUX || BX_PLATFORM_EMSCRIPTEN
     ImGui_ImplSDL2_InitForOpenGL(window, nullptr);
-#endif // BX_PLATFORM_WINDOWS ? BX_PLATFORM_OSX ? BX_PLATFORM_LINUX
+#endif // BX_PLATFORM_WINDOWS ? BX_PLATFORM_OSX ? BX_PLATFORM_LINUX ? BX_PLATFORM_EMSCRIPTEN
 
     bgfx::VertexLayout pos_col_vert_layout;
     pos_col_vert_layout.begin()

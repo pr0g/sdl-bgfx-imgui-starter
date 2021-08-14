@@ -14,8 +14,9 @@ inline bool fetch_file(const std::string& filename, std::string& fileContents) {
     if (fetch->status == 200) {
         *fileContents = fetch->data;
         return true;
-    } else
+    } else {
         return false;
+    }
 }
 
 } // namespace emscriptenutils
