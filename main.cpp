@@ -9,8 +9,15 @@
 #include "sdl-imgui/imgui_impl_sdl.h"
 
 #if BX_PLATFORM_EMSCRIPTEN
+#include "emscripten.h"
+#include "emscripten/html5.h"
 #include "bgfx-emscripten/bgfx_emscripten_utils.hpp"
 #endif // BX_PLATFORM_EMSCRIPTEN
+
+struct Data
+{
+    
+};
 
 struct PosColorVertex
 {
@@ -39,6 +46,76 @@ static bgfx::ShaderHandle createShader(
     const bgfx::ShaderHandle handle = bgfx::createShader(mem);
     bgfx::setName(handle, name);
     return handle;
+}
+
+static bool quit = false;
+
+void main_loop()
+{
+    SDL_Event currentEvent;
+    while (SDL_PollEvent(&currentEvent) != 0) {
+        ImGui_ImplSDL2_ProcessEvent(&currentEvent);
+        if (currentEvent.type == SDL_QUIT) {
+            quit = true;
+            break;
+        }
+    }
+
+    ImGui_Implbgfx_NewFrame();
+    ImGui_ImplSDL2_NewFrame(window);
+
+    ImGui::NewFrame();
+    ImGui::ShowDemoWindow(); // your drawing here
+    ImGui::Render();
+    ImGui_Implbgfx_RenderDrawLists(ImGui::GetDrawData());
+
+    // simple input code for orbit camera
+    int mouse_x, mouse_y;
+    const int buttons = SDL_GetGlobalMouseState(&mouse_x, &mouse_y);
+    if ((buttons & SDL_BUTTON(SDL_BUTTON_LEFT)) != 0) {
+        int delta_x = mouse_x - prev_mouse_x;
+        int delta_y = mouse_y - prev_mouse_y;
+        cam_yaw += float(-delta_x) * rot_scale;
+        cam_pitch += float(-delta_y) * rot_scale;
+    }
+
+    prev_mouse_x = mouse_x;
+    prev_mouse_y = mouse_y;
+
+    float cam_rotation[16];
+    bx::mtxRotateXYZ(cam_rotation, cam_pitch, cam_yaw, 0.0f);
+
+    float cam_translation[16];
+    bx::mtxTranslate(cam_translation, 0.0f, 0.0f, -5.0f);
+
+    float cam_transform[16];
+    bx::mtxMul(cam_transform, cam_translation, cam_rotation);
+
+    float view[16];
+    bx::mtxInverse(view, cam_transform);
+
+    float proj[16];
+    bx::mtxProj(
+        proj, 60.0f, float(width) / float(height), 0.1f, 100.0f,
+        bgfx::getCaps()->homogeneousDepth);
+
+    bgfx::setViewTransform(0, view, proj);
+
+    float model[16];
+    bx::mtxIdentity(model);
+    bgfx::setTransform(model);
+
+    bgfx::setVertexBuffer(0, vbh);
+    bgfx::setIndexBuffer(ibh);
+
+    bgfx::submit(0, program);
+
+    bgfx::frame();
+
+#if BX_PLATFORM_EMSCRIPTEN
+    if (quit)
+        emscripten_cancel_main_loop();
+#endif
 }
 
 int main(int argc, char** argv)
@@ -152,67 +229,13 @@ int main(int argc, char** argv)
     int prev_mouse_x = 0;
     int prev_mouse_y = 0;
 
-    for (bool quit = false; !quit;) {
-        SDL_Event currentEvent;
-        while (SDL_PollEvent(&currentEvent) != 0) {
-            ImGui_ImplSDL2_ProcessEvent(&currentEvent);
-            if (currentEvent.type == SDL_QUIT) {
-                quit = true;
-                break;
-            }
-        }
-
-        ImGui_Implbgfx_NewFrame();
-        ImGui_ImplSDL2_NewFrame(window);
-
-        ImGui::NewFrame();
-        ImGui::ShowDemoWindow(); // your drawing here
-        ImGui::Render();
-        ImGui_Implbgfx_RenderDrawLists(ImGui::GetDrawData());
-
-        // simple input code for orbit camera
-        int mouse_x, mouse_y;
-        const int buttons = SDL_GetGlobalMouseState(&mouse_x, &mouse_y);
-        if ((buttons & SDL_BUTTON(SDL_BUTTON_LEFT)) != 0) {
-            int delta_x = mouse_x - prev_mouse_x;
-            int delta_y = mouse_y - prev_mouse_y;
-            cam_yaw += float(-delta_x) * rot_scale;
-            cam_pitch += float(-delta_y) * rot_scale;
-        }
-
-        prev_mouse_x = mouse_x;
-        prev_mouse_y = mouse_y;
-
-        float cam_rotation[16];
-        bx::mtxRotateXYZ(cam_rotation, cam_pitch, cam_yaw, 0.0f);
-
-        float cam_translation[16];
-        bx::mtxTranslate(cam_translation, 0.0f, 0.0f, -5.0f);
-
-        float cam_transform[16];
-        bx::mtxMul(cam_transform, cam_translation, cam_rotation);
-
-        float view[16];
-        bx::mtxInverse(view, cam_transform);
-
-        float proj[16];
-        bx::mtxProj(
-            proj, 60.0f, float(width) / float(height), 0.1f, 100.0f,
-            bgfx::getCaps()->homogeneousDepth);
-
-        bgfx::setViewTransform(0, view, proj);
-
-        float model[16];
-        bx::mtxIdentity(model);
-        bgfx::setTransform(model);
-
-        bgfx::setVertexBuffer(0, vbh);
-        bgfx::setIndexBuffer(ibh);
-
-        bgfx::submit(0, program);
-
-        bgfx::frame();
+#if BX_PLATFORM_EMSCRIPTEN
+    emscripten_set_main_loop(main_loop, -1, 1);
+#else
+    while (!quit) {
+        main_loop();
     }
+#endif // BX_PLATFORM_EMSCRIPTEN
 
     bgfx::destroy(vbh);
     bgfx::destroy(ibh);
