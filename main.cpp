@@ -14,11 +14,6 @@
 #include "bgfx-emscripten/bgfx_emscripten_utils.hpp"
 #endif // BX_PLATFORM_EMSCRIPTEN
 
-struct Data
-{
-    
-};
-
 struct PosColorVertex
 {
     float x;
