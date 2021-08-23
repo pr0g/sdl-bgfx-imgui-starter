@@ -9,9 +9,9 @@
 #include "sdl-imgui/imgui_impl_sdl.h"
 
 #if BX_PLATFORM_EMSCRIPTEN
+#include "bgfx-emscripten/bgfx_emscripten_utils.hpp"
 #include "emscripten.h"
 #include "emscripten/html5.h"
-#include "bgfx-emscripten/bgfx_emscripten_utils.hpp"
 #endif // BX_PLATFORM_EMSCRIPTEN
 
 struct PosColorVertex
@@ -43,21 +43,41 @@ static bgfx::ShaderHandle createShader(
     return handle;
 }
 
-static bool quit = false;
-
-void main_loop()
+struct loop_data_t
 {
+    SDL_Window* window = nullptr;
+    bgfx::ProgramHandle program = BGFX_INVALID_HANDLE;
+    bgfx::VertexBufferHandle vbh = BGFX_INVALID_HANDLE;
+    bgfx::IndexBufferHandle ibh = BGFX_INVALID_HANDLE;
+
+    float cam_pitch = 0.0f;
+    float cam_yaw = 0.0f;
+    float rot_scale = 0.01f;
+
+    int prev_mouse_x = 0;
+    int prev_mouse_y = 0;
+
+    int width = 0;
+    int height = 0;
+
+    bool quit = false;
+};
+
+void main_loop(void* data)
+{
+    auto loop_data = static_cast<loop_data_t*>(data);
+
     SDL_Event currentEvent;
     while (SDL_PollEvent(&currentEvent) != 0) {
         ImGui_ImplSDL2_ProcessEvent(&currentEvent);
         if (currentEvent.type == SDL_QUIT) {
-            quit = true;
+            loop_data->quit = true;
             break;
         }
     }
 
     ImGui_Implbgfx_NewFrame();
-    ImGui_ImplSDL2_NewFrame(window);
+    ImGui_ImplSDL2_NewFrame(loop_data->window);
 
     ImGui::NewFrame();
     ImGui::ShowDemoWindow(); // your drawing here
@@ -68,17 +88,18 @@ void main_loop()
     int mouse_x, mouse_y;
     const int buttons = SDL_GetGlobalMouseState(&mouse_x, &mouse_y);
     if ((buttons & SDL_BUTTON(SDL_BUTTON_LEFT)) != 0) {
-        int delta_x = mouse_x - prev_mouse_x;
-        int delta_y = mouse_y - prev_mouse_y;
-        cam_yaw += float(-delta_x) * rot_scale;
-        cam_pitch += float(-delta_y) * rot_scale;
+        int delta_x = mouse_x - loop_data->prev_mouse_x;
+        int delta_y = mouse_y - loop_data->prev_mouse_y;
+        loop_data->cam_yaw += float(-delta_x) * loop_data->rot_scale;
+        loop_data->cam_pitch += float(-delta_y) * loop_data->rot_scale;
     }
 
-    prev_mouse_x = mouse_x;
-    prev_mouse_y = mouse_y;
+    loop_data->prev_mouse_x = mouse_x;
+    loop_data->prev_mouse_y = mouse_y;
 
     float cam_rotation[16];
-    bx::mtxRotateXYZ(cam_rotation, cam_pitch, cam_yaw, 0.0f);
+    bx::mtxRotateXYZ(
+        cam_rotation, loop_data->cam_pitch, loop_data->cam_yaw, 0.0f);
 
     float cam_translation[16];
     bx::mtxTranslate(cam_translation, 0.0f, 0.0f, -5.0f);
@@ -91,8 +112,8 @@ void main_loop()
 
     float proj[16];
     bx::mtxProj(
-        proj, 60.0f, float(width) / float(height), 0.1f, 100.0f,
-        bgfx::getCaps()->homogeneousDepth);
+        proj, 60.0f, float(loop_data->width) / float(loop_data->height), 0.1f,
+        100.0f, bgfx::getCaps()->homogeneousDepth);
 
     bgfx::setViewTransform(0, view, proj);
 
@@ -100,16 +121,17 @@ void main_loop()
     bx::mtxIdentity(model);
     bgfx::setTransform(model);
 
-    bgfx::setVertexBuffer(0, vbh);
-    bgfx::setIndexBuffer(ibh);
+    bgfx::setVertexBuffer(0, loop_data->vbh);
+    bgfx::setIndexBuffer(loop_data->ibh);
 
-    bgfx::submit(0, program);
+    bgfx::submit(0, loop_data->program);
 
     bgfx::frame();
 
 #if BX_PLATFORM_EMSCRIPTEN
-    if (quit)
+    if (loop_data->quit) {
         emscripten_cancel_main_loop();
+    }
 #endif
 }
 
@@ -142,6 +164,7 @@ int main(int argc, char** argv)
             SDL_GetError());
         return 1;
     }
+#endif // !BX_PLATFORM_EMSCRIPTEN
 
 #if BX_PLATFORM_WINDOWS
     pd.nwh = wmi.info.win.window;
@@ -150,10 +173,10 @@ int main(int argc, char** argv)
 #elif BX_PLATFORM_LINUX
     pd.ndt = wmi.info.x11.display;
     pd.nwh = (void*)(uintptr_t)wmi.info.x11.window;
-#endif // BX_PLATFORM_WINDOWS ? BX_PLATFORM_OSX ? BX_PLATFORM_LINUX
-#else
+#elif BX_PLATFORM_EMSCRIPTEN
     pd.nwh = (void*)"#canvas";
-#endif // BX_PLATFORM_EMSCRIPTEN
+#endif // BX_PLATFORM_WINDOWS ? BX_PLATFORM_OSX ? BX_PLATFORM_LINUX ?
+       // BX_PLATFORM_EMSCRIPTEN
 
     bgfx::renderFrame(); // single threaded mode
 
@@ -179,7 +202,8 @@ int main(int argc, char** argv)
     ImGui_ImplSDL2_InitForMetal(window);
 #elif BX_PLATFORM_LINUX || BX_PLATFORM_EMSCRIPTEN
     ImGui_ImplSDL2_InitForOpenGL(window, nullptr);
-#endif // BX_PLATFORM_WINDOWS ? BX_PLATFORM_OSX ? BX_PLATFORM_LINUX ? BX_PLATFORM_EMSCRIPTEN
+#endif // BX_PLATFORM_WINDOWS ? BX_PLATFORM_OSX ? BX_PLATFORM_LINUX ?
+       // BX_PLATFORM_EMSCRIPTEN
 
     bgfx::VertexLayout pos_col_vert_layout;
     pos_col_vert_layout.begin()
@@ -214,21 +238,21 @@ int main(int argc, char** argv)
 
     bgfx::ShaderHandle vsh = createShader(vshader, "vshader");
     bgfx::ShaderHandle fsh = createShader(fshader, "fshader");
-
     bgfx::ProgramHandle program = bgfx::createProgram(vsh, fsh, true);
 
-    float cam_pitch = 0.0f;
-    float cam_yaw = 0.0f;
-    float rot_scale = 0.01f;
-
-    int prev_mouse_x = 0;
-    int prev_mouse_y = 0;
+    loop_data_t loop_data;
+    loop_data.width = width;
+    loop_data.height = height;
+    loop_data.program = program;
+    loop_data.window = window;
+    loop_data.vbh = vbh;
+    loop_data.ibh = ibh;
 
 #if BX_PLATFORM_EMSCRIPTEN
-    emscripten_set_main_loop(main_loop, -1, 1);
+    emscripten_set_main_loop_arg(main_loop, &loop_data, -1, 1);
 #else
-    while (!quit) {
-        main_loop();
+    while (!loop_data.quit) {
+        main_loop(&loop_data);
     }
 #endif // BX_PLATFORM_EMSCRIPTEN
 
