@@ -178,8 +178,6 @@ int main(int argc, char** argv)
 #endif // BX_PLATFORM_WINDOWS ? BX_PLATFORM_OSX ? BX_PLATFORM_LINUX ?
        // BX_PLATFORM_EMSCRIPTEN
 
-    bgfx::renderFrame(); // single threaded mode
-
     bgfx::Init bgfx_init;
     bgfx_init.type = bgfx::RendererType::Count; // auto choose renderer
     bgfx_init.resolution.width = width;

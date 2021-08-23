@@ -22,7 +22,7 @@ target_link_libraries(
 )
 
 target_compile_options(${PROJECT_NAME} PRIVATE -sUSE_SDL=2)
-target_link_options(${PROJECT_NAME} PRIVATE -sMAX_WEBGL_VERSION=2 -sFETCH=1)
+target_link_options(${PROJECT_NAME} PRIVATE -sMAX_WEBGL_VERSION=2 -sFETCH=1 -sALLOW_MEMORY_GROWTH=1)
 
 set_target_properties(
     ${PROJECT_NAME} PROPERTIES CXX_STANDARD 11 SUFFIX ".html")
