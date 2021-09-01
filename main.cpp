@@ -9,9 +9,7 @@
 #include "sdl-imgui/imgui_impl_sdl.h"
 
 #if BX_PLATFORM_EMSCRIPTEN
-#include "bgfx-emscripten/bgfx_emscripten_utils.hpp"
 #include "emscripten.h"
-#include "emscripten/html5.h"
 #endif // BX_PLATFORM_EMSCRIPTEN
 
 struct PosColorVertex
@@ -86,7 +84,7 @@ void main_loop(void* data)
 
     // simple input code for orbit camera
     int mouse_x, mouse_y;
-    const int buttons = SDL_GetGlobalMouseState(&mouse_x, &mouse_y);
+    const int buttons = SDL_GetMouseState(&mouse_x, &mouse_y);
     if ((buttons & SDL_BUTTON(SDL_BUTTON_LEFT)) != 0) {
         int delta_x = mouse_x - loop_data->prev_mouse_x;
         int delta_y = mouse_y - loop_data->prev_mouse_y;
@@ -215,24 +213,14 @@ int main(int argc, char** argv)
         bgfx::makeRef(cube_tri_list, sizeof(cube_tri_list)));
 
     std::string vshader;
+    if (!fileops::read_file("v_simple.bin", vshader)) {
+        return 1;
+    }
+
     std::string fshader;
-#if BX_PLATFORM_EMSCRIPTEN
-    if (!emscriptenutils::fetch_file("shader/v_simple.bin", vshader)) {
+    if (!fileops::read_file("f_simple.bin", fshader)) {
         return 1;
     }
-
-    if (!emscriptenutils::fetch_file("shader/f_simple.bin", fshader)) {
-        return 1;
-    }
-#else
-    if (!fileops::read_file("shader/v_simple.bin", vshader)) {
-        return 1;
-    }
-
-    if (!fileops::read_file("shader/f_simple.bin", fshader)) {
-        return 1;
-    }
-#endif // BX_PLATFORM_EMSCRIPTEN
 
     bgfx::ShaderHandle vsh = createShader(vshader, "vshader");
     bgfx::ShaderHandle fsh = createShader(fshader, "fshader");
