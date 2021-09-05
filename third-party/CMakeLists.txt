@@ -44,8 +44,8 @@ ExternalProject_Add(
 ExternalProject_Add(
     cmakefied
     GIT_REPOSITORY https://github.com/pr0g/cmakefied.git
-    GIT_TAG        5b201e9be3fa85fdd987110c4a9a2f91f28c0af1
-    UPDATE_COMMAND bash <SOURCE_DIR>/git-clone.sh imgui
+    GIT_TAG        0ac2c9adbc0b1d26c19eafd8837a8de42bf30a98
+    UPDATE_COMMAND cd <SOURCE_DIR> && bash git-clone.sh imgui
     SOURCE_SUBDIR ../imgui
     BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR}/imgui/build/${build_type_dir}
     INSTALL_DIR ${CMAKE_CURRENT_BINARY_DIR}
