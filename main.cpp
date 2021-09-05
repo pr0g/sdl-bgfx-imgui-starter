@@ -65,8 +65,7 @@ void main_loop(void* data)
 {
     auto context = static_cast<context_t*>(data);
 
-    SDL_Event currentEvent;
-    while (SDL_PollEvent(&currentEvent) != 0) {
+    for (SDL_Event currentEvent; SDL_PollEvent(&currentEvent) != 0;) {
         ImGui_ImplSDL2_ProcessEvent(&currentEvent);
         if (currentEvent.type == SDL_QUIT) {
             context->quit = true;
