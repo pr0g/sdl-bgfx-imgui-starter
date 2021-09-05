@@ -151,8 +151,6 @@ int main(int argc, char** argv)
         return 1;
     }
 
-    bgfx::PlatformData pd{};
-
 #if !BX_PLATFORM_EMSCRIPTEN
     SDL_SysWMinfo wmi;
     SDL_VERSION(&wmi.version);
@@ -164,6 +162,7 @@ int main(int argc, char** argv)
     }
 #endif // !BX_PLATFORM_EMSCRIPTEN
 
+    bgfx::PlatformData pd{};
 #if BX_PLATFORM_WINDOWS
     pd.nwh = wmi.info.win.window;
 #elif BX_PLATFORM_OSX
@@ -213,12 +212,12 @@ int main(int argc, char** argv)
         bgfx::makeRef(cube_tri_list, sizeof(cube_tri_list)));
 
     std::string vshader;
-    if (!fileops::read_file("v_simple.bin", vshader)) {
+    if (!fileops::read_file("shader/v_simple.bin", vshader)) {
         return 1;
     }
 
     std::string fshader;
-    if (!fileops::read_file("f_simple.bin", fshader)) {
+    if (!fileops::read_file("shader/f_simple.bin", fshader)) {
         return 1;
     }
 

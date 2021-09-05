@@ -18,8 +18,8 @@ target_link_options(
   $<$<BOOL:${EMSCRIPTEN}>:-sMAX_WEBGL_VERSION=2
   -sFETCH=1
   -sALLOW_MEMORY_GROWTH=1
-  --preload-file=v_simple.bin
-  --preload-file=f_simple.bin>)
+  --preload-file=shader/v_simple.bin
+  --preload-file=shader/f_simple.bin>)
 
 if (${EMSCRIPTEN})
   set_target_properties(${PROJECT_NAME} PROPERTIES SUFFIX ".html")
@@ -27,13 +27,16 @@ if (${EMSCRIPTEN})
     TARGET ${PROJECT_NAME}
     PRE_BUILD
     COMMAND
+      ${CMAKE_COMMAND} -E make_directory
+      $<TARGET_FILE_DIR:${PROJECT_NAME}>/shader
+    COMMAND
       ${CMAKE_COMMAND} -E copy_if_different
       ${CMAKE_CURRENT_SOURCE_DIR}/shader/v_simple.bin
-      $<TARGET_FILE_DIR:${PROJECT_NAME}>
+      $<TARGET_FILE_DIR:${PROJECT_NAME}>/shader
     COMMAND
       ${CMAKE_COMMAND} -E copy_if_different
       ${CMAKE_CURRENT_SOURCE_DIR}/shader/f_simple.bin
-      $<TARGET_FILE_DIR:${PROJECT_NAME}>
+      $<TARGET_FILE_DIR:${PROJECT_NAME}>/shader
     VERBATIM)
 endif ()
 
