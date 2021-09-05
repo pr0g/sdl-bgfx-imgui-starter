@@ -41,7 +41,7 @@ static bgfx::ShaderHandle createShader(
     return handle;
 }
 
-struct loop_data_t
+struct context_t
 {
     SDL_Window* window = nullptr;
     bgfx::ProgramHandle program = BGFX_INVALID_HANDLE;
@@ -63,19 +63,19 @@ struct loop_data_t
 
 void main_loop(void* data)
 {
-    auto loop_data = static_cast<loop_data_t*>(data);
+    auto context = static_cast<context_t*>(data);
 
     SDL_Event currentEvent;
     while (SDL_PollEvent(&currentEvent) != 0) {
         ImGui_ImplSDL2_ProcessEvent(&currentEvent);
         if (currentEvent.type == SDL_QUIT) {
-            loop_data->quit = true;
+            context->quit = true;
             break;
         }
     }
 
     ImGui_Implbgfx_NewFrame();
-    ImGui_ImplSDL2_NewFrame(loop_data->window);
+    ImGui_ImplSDL2_NewFrame(context->window);
 
     ImGui::NewFrame();
     ImGui::ShowDemoWindow(); // your drawing here
@@ -86,18 +86,18 @@ void main_loop(void* data)
     int mouse_x, mouse_y;
     const int buttons = SDL_GetMouseState(&mouse_x, &mouse_y);
     if ((buttons & SDL_BUTTON(SDL_BUTTON_LEFT)) != 0) {
-        int delta_x = mouse_x - loop_data->prev_mouse_x;
-        int delta_y = mouse_y - loop_data->prev_mouse_y;
-        loop_data->cam_yaw += float(-delta_x) * loop_data->rot_scale;
-        loop_data->cam_pitch += float(-delta_y) * loop_data->rot_scale;
+        int delta_x = mouse_x - context->prev_mouse_x;
+        int delta_y = mouse_y - context->prev_mouse_y;
+        context->cam_yaw += float(-delta_x) * context->rot_scale;
+        context->cam_pitch += float(-delta_y) * context->rot_scale;
     }
 
-    loop_data->prev_mouse_x = mouse_x;
-    loop_data->prev_mouse_y = mouse_y;
+    context->prev_mouse_x = mouse_x;
+    context->prev_mouse_y = mouse_y;
 
     float cam_rotation[16];
     bx::mtxRotateXYZ(
-        cam_rotation, loop_data->cam_pitch, loop_data->cam_yaw, 0.0f);
+        cam_rotation, context->cam_pitch, context->cam_yaw, 0.0f);
 
     float cam_translation[16];
     bx::mtxTranslate(cam_translation, 0.0f, 0.0f, -5.0f);
@@ -110,7 +110,7 @@ void main_loop(void* data)
 
     float proj[16];
     bx::mtxProj(
-        proj, 60.0f, float(loop_data->width) / float(loop_data->height), 0.1f,
+        proj, 60.0f, float(context->width) / float(context->height), 0.1f,
         100.0f, bgfx::getCaps()->homogeneousDepth);
 
     bgfx::setViewTransform(0, view, proj);
@@ -119,15 +119,15 @@ void main_loop(void* data)
     bx::mtxIdentity(model);
     bgfx::setTransform(model);
 
-    bgfx::setVertexBuffer(0, loop_data->vbh);
-    bgfx::setIndexBuffer(loop_data->ibh);
+    bgfx::setVertexBuffer(0, context->vbh);
+    bgfx::setIndexBuffer(context->ibh);
 
-    bgfx::submit(0, loop_data->program);
+    bgfx::submit(0, context->program);
 
     bgfx::frame();
 
 #if BX_PLATFORM_EMSCRIPTEN
-    if (loop_data->quit) {
+    if (context->quit) {
         emscripten_cancel_main_loop();
     }
 #endif
@@ -160,6 +160,7 @@ int main(int argc, char** argv)
             SDL_GetError());
         return 1;
     }
+    bgfx::renderFrame(); // single threaded mode
 #endif // !BX_PLATFORM_EMSCRIPTEN
 
     bgfx::PlatformData pd{};
@@ -225,19 +226,19 @@ int main(int argc, char** argv)
     bgfx::ShaderHandle fsh = createShader(fshader, "fshader");
     bgfx::ProgramHandle program = bgfx::createProgram(vsh, fsh, true);
 
-    loop_data_t loop_data;
-    loop_data.width = width;
-    loop_data.height = height;
-    loop_data.program = program;
-    loop_data.window = window;
-    loop_data.vbh = vbh;
-    loop_data.ibh = ibh;
+    context_t context;
+    context.width = width;
+    context.height = height;
+    context.program = program;
+    context.window = window;
+    context.vbh = vbh;
+    context.ibh = ibh;
 
 #if BX_PLATFORM_EMSCRIPTEN
-    emscripten_set_main_loop_arg(main_loop, &loop_data, -1, 1);
+    emscripten_set_main_loop_arg(main_loop, &context, -1, 1);
 #else
-    while (!loop_data.quit) {
-        main_loop(&loop_data);
+    while (!context.quit) {
+        main_loop(&context);
     }
 #endif // BX_PLATFORM_EMSCRIPTEN
 
