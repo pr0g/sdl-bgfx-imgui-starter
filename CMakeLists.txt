@@ -26,9 +26,8 @@ if (${EMSCRIPTEN})
   add_custom_command(
     TARGET ${PROJECT_NAME}
     PRE_BUILD
-    COMMAND
-      ${CMAKE_COMMAND} -E make_directory
-      $<TARGET_FILE_DIR:${PROJECT_NAME}>/shader
+    COMMAND ${CMAKE_COMMAND} -E make_directory
+            $<TARGET_FILE_DIR:${PROJECT_NAME}>/shader
     COMMAND
       ${CMAKE_COMMAND} -E copy_if_different
       ${CMAKE_CURRENT_SOURCE_DIR}/shader/v_simple.bin
