@@ -4,7 +4,7 @@
 
 # simple shader
 ./third-party/build/bin/shaderc \
--f shader/v_simple.sc -o shader/v_simple.bin  \
+-f shader/v_simple.sc -o shader/v_simple.bin \
 --platform asmjs --type vertex --verbose -i ./
 
 ./third-party/build/bin/shaderc \

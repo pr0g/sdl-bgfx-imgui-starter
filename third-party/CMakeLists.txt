@@ -27,7 +27,9 @@ ExternalProject_Add(
     INSTALL_DIR ${CMAKE_CURRENT_BINARY_DIR}
     CMAKE_COMMAND ${THIRD_PARTY_CMAKE_COMMAND}
     CMAKE_ARGS ${build_type_arg}
-               -D CMAKE_INSTALL_PREFIX=<INSTALL_DIR>)
+               -D CMAKE_INSTALL_PREFIX=<INSTALL_DIR>
+    BUILD_COMMAND cmake --build <BINARY_DIR>
+    INSTALL_COMMAND cmake --build <BINARY_DIR> --target install)
 
 ExternalProject_Add(
     bgfx
@@ -39,17 +41,21 @@ ExternalProject_Add(
     CMAKE_ARGS ${build_type_arg}
                -D CMAKE_INSTALL_PREFIX=<INSTALL_DIR>
                "$<$<CONFIG:Debug>:-DCMAKE_DEBUG_POSTFIX=d>"
-               -D BGFX_BUILD_EXAMPLES=OFF)
+               -D BGFX_BUILD_EXAMPLES=OFF
+    BUILD_COMMAND cmake --build <BINARY_DIR>
+    INSTALL_COMMAND cmake --build <BINARY_DIR> --target install)
 
 ExternalProject_Add(
     cmakefied
     GIT_REPOSITORY https://github.com/pr0g/cmakefied.git
     GIT_TAG        0ac2c9adbc0b1d26c19eafd8837a8de42bf30a98
-    UPDATE_COMMAND cd <SOURCE_DIR> && bash git-clone.sh imgui
+    UPDATE_COMMAND cd <SOURCE_DIR> && bash git-clone.sh imgui && cd ${CMAKE_SOURCE_DIR}
     SOURCE_SUBDIR ../imgui
     BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR}/imgui/build/${build_type_dir}
     INSTALL_DIR ${CMAKE_CURRENT_BINARY_DIR}
     CMAKE_COMMAND ${THIRD_PARTY_CMAKE_COMMAND}
     CMAKE_ARGS ${build_type_arg}
                -D CMAKE_INSTALL_PREFIX=<INSTALL_DIR>
-               -D IMGUI_DISABLE_OBSOLETE_FUNCTIONS=ON)
+               -D IMGUI_DISABLE_OBSOLETE_FUNCTIONS=ON
+    BUILD_COMMAND cmake --build <BINARY_DIR>
+    INSTALL_COMMAND cmake --build <BINARY_DIR> --target install)
