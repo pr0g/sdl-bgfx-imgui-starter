@@ -95,8 +95,7 @@ void main_loop(void* data)
     context->prev_mouse_y = mouse_y;
 
     float cam_rotation[16];
-    bx::mtxRotateXYZ(
-        cam_rotation, context->cam_pitch, context->cam_yaw, 0.0f);
+    bx::mtxRotateXYZ(cam_rotation, context->cam_pitch, context->cam_yaw, 0.0f);
 
     float cam_translation[16];
     bx::mtxTranslate(cam_translation, 0.0f, 0.0f, -5.0f);

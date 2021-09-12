@@ -1,6 +1,7 @@
 ---
 AccessModifierOffset: -4
 AlignAfterOpenBracket: AlwaysBreak
+AlignTrailingComments: false
 AllowShortFunctionsOnASingleLine: InlineOnly
 AlwaysBreakAfterDefinitionReturnType: None
 AlwaysBreakAfterReturnType: None

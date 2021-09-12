@@ -13,11 +13,8 @@ target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_11)
 target_link_libraries(${PROJECT_NAME} PRIVATE SDL2::SDL2-static SDL2::SDL2main
                                               bgfx::bgfx bgfx::bx imgui::imgui)
 target_link_options(
-  ${PROJECT_NAME}
-  PRIVATE
-  $<$<BOOL:${EMSCRIPTEN}>:-sMAX_WEBGL_VERSION=2
-  -sALLOW_MEMORY_GROWTH=1
-  --preload-file=shader/v_simple.bin
+  ${PROJECT_NAME} PRIVATE $<$<BOOL:${EMSCRIPTEN}>:-sMAX_WEBGL_VERSION=2
+  -sALLOW_MEMORY_GROWTH=1 --preload-file=shader/v_simple.bin
   --preload-file=shader/f_simple.bin>)
 
 if (${EMSCRIPTEN})
