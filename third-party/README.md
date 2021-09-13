@@ -52,6 +52,21 @@ It might take a little while but behind the scenes `CMake` will go away and down
 
 Once everything is complete you should be able to continue with the instructions in the main [README](README.md).
 
+## Emscripten
+
+It's also possible to build the third-party dependencies for use with Emscripten. To do this run the same commands as before, only prefix the configure step with `emcmake`.
+
+```bash
+# install emsdk (instructions: https://emscripten.org/docs/getting_started/downloads.html)
+# setup Emscripten environment variables
+source <emsdk>/emsdk_env.sh # on macOS/Linux
+# or
+<emsdk>/emsdk_env.bat # on Windows
+#
+emcmake cmake -B build # configure for Emscripten
+cmake --build build # build libraries for Emscripten
+```
+
 ## Wrap-Up
 
 If you plan to create several projects you could install these dependencies to a shared location and use `CMAKE_PREFIX_PATH` to point to that location when building.

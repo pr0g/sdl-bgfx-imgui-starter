@@ -63,6 +63,16 @@ Shaders for `bgfx` also must be compiled to be loaded by the application (the st
 - Run `./compile-shaders-linux.sh` located in the root directory to build the shaders.
 - Launch the application by running `./build/debug/sdl-bgfx-imgui-starter` or `./build/release/sdl-bgfx-imgui-starter`.
 
+### Emscripten (Windows/macOS/Linux)
+
+- Run `./configure-emscripten.<bat/sh>` from the root directory.
+- Run `cmake --build build/debug-emscripten` and/or `cmake --build build/release-emscripten`.
+- Run `./compile-shaders-emscripten.<bat/sh>` located in the root directory. (_Note: In order to invoke_ `shaderc`, _the third-party dependencies (specifically_  `bgfx`_) will have to have been built for the target platform as well as Emscripten so the shaders can be compiled_).
+- Start a local server (easiest way to do this is with `python3 -m http.server`).
+- Go to `localhost:8000` in a browser and open `build/<debug/release>-emscripten/sdl-bgfx-imgui-starter.html`.
+
+> Info: On Windows it may be necessary to run the command-line/terminal as Administrator.
+
 ## Resources
 
 While getting this project setup I discovered a number of excellent resources. I'd highly recommend checking them out to learn more about `bgfx` and `Dear ImGui`.
@@ -84,3 +94,4 @@ While getting this project setup I discovered a number of excellent resources. I
 - [Tamas Kenez](https://github.com/tamaskenez) for the `Dear Imgui` CMake support
 - [Richard Gale (@richardg4)](https://twitter.com/richardg4) for the `bgfx` implementation for `Dear ImGui`
 - [Phil Peron (@pperon)](https://twitter.com/pperon) and [Sandeep Nambiar (@_sandeepnambiar)](https://twitter.com/_sandeepnambiar) for the great `bgfx` setup tutorials.
+- [sudo-carson](https://github.com/sudo-carson) for laying the ground work for integrating Emscripten into the project. See [this PR](https://github.com/pr0g/sdl-bgfx-imgui-starter/pull/8) for all the details.
