@@ -23,8 +23,8 @@ endif ()
 
 ExternalProject_Add(
   SDL2
-  URL https://www.libsdl.org/release/SDL2-2.0.14.tar.gz
-  URL_HASH MD5=76ed4e6da9c07bd168b2acd9bfefab1b
+  URL https://www.libsdl.org/release/SDL2-2.0.20.tar.gz
+  URL_HASH MD5=a53acc02e1cca98c4123229069b67c9e
   BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR}/SDL2/build/${build_type_dir}
   INSTALL_DIR ${CMAKE_CURRENT_BINARY_DIR}
   CMAKE_COMMAND ${THIRD_PARTY_CMAKE_COMMAND}
