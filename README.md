@@ -40,28 +40,28 @@ Once all third party libraries have been downloaded and installed, follow these 
 
 Shaders for `bgfx` also must be compiled to be loaded by the application (the starter has an incredibly simple shader supporting vertex colours).
 
-> __Info:__ A `configure-<generator>.bat` and `configure-<generator>.sh` file are provided (mainly as an example) to run the CMake configure commands. `Ninja` is preferred as it's consistent across _macOS_, _Linux_ and _Windows_ (and it's very fast), any generator should work though. For example there's a `configure-vs.bat` for generating a Visual Studio solution.
+> __Info:__ A `configure-<generator>.bat` and `configure-<generator>.sh` file are provided (mainly as an example) to run the CMake configure commands. `Ninja` is preferred as it's consistent across _macOS_, _Linux_ and _Windows_ (and it's very fast), any generator should work though. For example there's a `configure-vs-19/22.bat` for generating a Visual Studio 2019 or 2022 solution.
 
 ### Windows
 
-- Run `./configure-vs.bat` or `./configure-ninja.bat` located in the root directory to generate the build files required for the project.
-- Run `cmake --build build/debug` and/or `cmake --build build/release` to compile the project.
+- Run `./configure-vs-19.bat`, `./configure-vs-22.bat` or `./configure-ninja.bat` located in the root directory to generate the build files required for the project.
+- Run `cmake --build build-ninja/debug` and/or `cmake --build build-ninja/release` to compile the project using Ninja or `cmake --build build-vs-<year> --config Debug` and/or `cmake --build build-vs-<year> --config Release` if using the Visual Studio generator.
 - Run `./compile-shaders-win.bat` located in the root directory to build the shaders.
-- Launch the application by running `build\debug\sdl-bgfx-imgui-starter.exe` or `build\release\sdl-bgfx-imgui-starter.exe`.
+- Launch the application by running `build-ninja/debug/sdl-bgfx-imgui-starter.exe` or `build-ninja/release/sdl-bgfx-imgui-starter.exe` if using Ninja or `build-vs-<year>/Debug/sdl-bgfx-imgui-starter.exe` or `build-vs-<year>/Release/sdl-bgfx-imgui-starter.exe`. if using Visual Studio.
 
 ### macOS
 
 - Run `./configure-make.sh` or `./configure-ninja.sh` located in the root directory to generate the build files required for the project.
-- Run `cmake --build build/debug` and/or `cmake --build build/release` to compile the project.
+- Run `cmake --build build-<generator>/debug` and/or `cmake --build build-<generator>/release` to compile the project.
 - Run `./compile-shaders-macos.sh` located in the root directory to build the shaders.
-- Launch the application by running `./build/debug/sdl-bgfx-imgui-starter` or `./build/release/sdl-bgfx-imgui-starter`.
+- Launch the application by running `./build-<generator>/debug/sdl-bgfx-imgui-starter` or `./build-<generator>/release/sdl-bgfx-imgui-starter`.
 
 ### Linux
 
 - Run `./configure-make.sh` or `./configure-ninja.sh` located in the root directory to generate the build files required for the project.
-- Run `cmake --build build/debug` and/or `cmake --build build/release` to compile the project.
+- Run `cmake --build build-<generator>/debug` and/or `cmake --build build-<generator>/release` to compile the project.
 - Run `./compile-shaders-linux.sh` located in the root directory to build the shaders.
-- Launch the application by running `./build/debug/sdl-bgfx-imgui-starter` or `./build/release/sdl-bgfx-imgui-starter`.
+- Launch the application by running `./build-<generator>/debug/sdl-bgfx-imgui-starter` or `./build-<generator>/release/sdl-bgfx-imgui-starter`.
 
 ### Emscripten (Windows/macOS/Linux)
 

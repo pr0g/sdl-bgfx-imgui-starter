@@ -35,7 +35,7 @@ cmake -B build
 
 It's fine not to specify a generator, any should work (and the `CMakeLists.txt` file should handle either single or multi-config generators).
 
-> Note: For single-config generators the above will configure the libraries to build in `Debug`. To build them in `Release` (after performing the step listed below to build the libraries in `Debug`), run `cmake -S . -B build -DCMAKE_BUILD_TYPE=Release`, and then invoke `cmake --build build` again.
+> Note: For single-config generators the above will configure the libraries to build in `Debug`. To build them in `Release` (after performing the step listed below to build the libraries in `Debug`), run `cmake -B build -DCMAKE_BUILD_TYPE=Release`, and then invoke `cmake --build build` again.
 
 Then run:
 
