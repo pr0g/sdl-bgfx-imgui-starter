@@ -46,16 +46,14 @@ ExternalProject_Add(
   INSTALL_COMMAND cmake --build <BINARY_DIR> --target install)
 
 ExternalProject_Add(
-  cmakefied
-  GIT_REPOSITORY https://github.com/pr0g/cmakefied.git
-  GIT_TAG 0ac2c9adbc0b1d26c19eafd8837a8de42bf30a98
-  UPDATE_COMMAND cd <SOURCE_DIR> && bash git-clone.sh imgui && cd
-                 ${CMAKE_SOURCE_DIR}
-  SOURCE_SUBDIR ../imgui
+  imgui.cmake
+  GIT_REPOSITORY https://github.com/pr0g/imgui.cmake.git
+  GIT_TAG 6cf719bdde34bfbcad7914210875bcf78edd2c1c
   BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR}/imgui/build/${build_type_dir}
   INSTALL_DIR ${CMAKE_CURRENT_BINARY_DIR}
   CMAKE_COMMAND ${THIRD_PARTY_CMAKE_COMMAND}
   CMAKE_ARGS ${build_type_arg} -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>
+             "$<$<CONFIG:Debug>:-DCMAKE_DEBUG_POSTFIX=d>"
              -DIMGUI_DISABLE_OBSOLETE_FUNCTIONS=ON
   BUILD_COMMAND cmake --build <BINARY_DIR>
   INSTALL_COMMAND cmake --build <BINARY_DIR> --target install)
