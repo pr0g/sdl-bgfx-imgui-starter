@@ -74,7 +74,7 @@ void main_loop(void* data)
     }
 
     ImGui_Implbgfx_NewFrame();
-    ImGui_ImplSDL2_NewFrame(context->window);
+    ImGui_ImplSDL2_NewFrame();
 
     ImGui::NewFrame();
     ImGui::ShowDemoWindow(); // your drawing here
