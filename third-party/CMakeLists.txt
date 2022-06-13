@@ -13,6 +13,8 @@ if (NOT isMultiConfig)
   endif ()
   set(build_type_dir ${CMAKE_BUILD_TYPE})
   set(build_type_arg -DCMAKE_BUILD_TYPE=$<CONFIG>)
+else ()
+  set(build_config_arg --config=$<CONFIG>)
 endif ()
 
 if (${CMAKE_SYSTEM_NAME} STREQUAL "Emscripten")
@@ -29,8 +31,8 @@ ExternalProject_Add(
   INSTALL_DIR ${CMAKE_CURRENT_BINARY_DIR}
   CMAKE_COMMAND ${THIRD_PARTY_CMAKE_COMMAND}
   CMAKE_ARGS ${build_type_arg} -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>
-  BUILD_COMMAND cmake --build <BINARY_DIR>
-  INSTALL_COMMAND cmake --build <BINARY_DIR> --target install)
+  BUILD_COMMAND cmake --build <BINARY_DIR> ${build_config_arg}
+  INSTALL_COMMAND cmake --build <BINARY_DIR> --target install ${build_config_arg})
 
 ExternalProject_Add(
   bgfx
@@ -42,8 +44,8 @@ ExternalProject_Add(
   CMAKE_ARGS ${build_type_arg} -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>
              "$<$<CONFIG:Debug>:-DCMAKE_DEBUG_POSTFIX=d>"
              -DBGFX_BUILD_EXAMPLES=OFF
-  BUILD_COMMAND cmake --build <BINARY_DIR>
-  INSTALL_COMMAND cmake --build <BINARY_DIR> --target install)
+  BUILD_COMMAND cmake --build <BINARY_DIR> ${build_config_arg}
+  INSTALL_COMMAND cmake --build <BINARY_DIR> --target install ${build_config_arg})
 
 ExternalProject_Add(
   imgui.cmake
@@ -55,5 +57,5 @@ ExternalProject_Add(
   CMAKE_ARGS ${build_type_arg} -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>
              "$<$<CONFIG:Debug>:-DCMAKE_DEBUG_POSTFIX=d>"
              -DIMGUI_DISABLE_OBSOLETE_FUNCTIONS=ON
-  BUILD_COMMAND cmake --build <BINARY_DIR>
-  INSTALL_COMMAND cmake --build <BINARY_DIR> --target install)
+  BUILD_COMMAND cmake --build <BINARY_DIR> ${build_config_arg}
+  INSTALL_COMMAND cmake --build <BINARY_DIR> --target install ${build_config_arg})
