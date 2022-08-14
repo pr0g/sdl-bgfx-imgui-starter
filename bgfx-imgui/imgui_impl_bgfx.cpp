@@ -66,7 +66,6 @@ void ImGui_Implbgfx_RenderDrawLists(ImDrawData* draw_data)
     // Render command lists
     for (int n = 0; n < draw_data->CmdListsCount; n++) {
         const ImDrawList* cmd_list = draw_data->CmdLists[n];
-        uint32_t idx_buffer_offset = 0;
 
         bgfx::TransientVertexBuffer tvb;
         bgfx::TransientIndexBuffer tib;
@@ -111,11 +110,9 @@ void ImGui_Implbgfx_RenderDrawLists(ImDrawData* draw_data)
                     (uint16_t)((intptr_t)pcmd->TextureId & 0xffff)};
                 bgfx::setTexture(0, g_AttribLocationTex, texture);
                 bgfx::setVertexBuffer(0, &tvb, 0, numVertices);
-                bgfx::setIndexBuffer(&tib, idx_buffer_offset, pcmd->ElemCount);
+                bgfx::setIndexBuffer(&tib, pcmd->IdxOffset, pcmd->ElemCount);
                 bgfx::submit(g_View, g_ShaderHandle);
             }
-
-            idx_buffer_offset += pcmd->ElemCount;
         }
     }
 }
