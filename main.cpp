@@ -81,18 +81,19 @@ void main_loop(void* data)
     ImGui::Render();
     ImGui_Implbgfx_RenderDrawLists(ImGui::GetDrawData());
 
-    // simple input code for orbit camera
-    int mouse_x, mouse_y;
-    const int buttons = SDL_GetMouseState(&mouse_x, &mouse_y);
-    if ((buttons & SDL_BUTTON(SDL_BUTTON_LEFT)) != 0) {
-        int delta_x = mouse_x - context->prev_mouse_x;
-        int delta_y = mouse_y - context->prev_mouse_y;
-        context->cam_yaw += float(-delta_x) * context->rot_scale;
-        context->cam_pitch += float(-delta_y) * context->rot_scale;
+    if (!ImGui::GetIO().WantCaptureMouse) {
+        // simple input code for orbit camera
+        int mouse_x, mouse_y;
+        const int buttons = SDL_GetMouseState(&mouse_x, &mouse_y);
+        if ((buttons & SDL_BUTTON(SDL_BUTTON_LEFT)) != 0) {
+            int delta_x = mouse_x - context->prev_mouse_x;
+            int delta_y = mouse_y - context->prev_mouse_y;
+            context->cam_yaw += float(-delta_x) * context->rot_scale;
+            context->cam_pitch += float(-delta_y) * context->rot_scale;
+        }
+        context->prev_mouse_x = mouse_x;
+        context->prev_mouse_y = mouse_y;
     }
-
-    context->prev_mouse_x = mouse_x;
-    context->prev_mouse_y = mouse_y;
 
     float cam_rotation[16];
     bx::mtxRotateXYZ(cam_rotation, context->cam_pitch, context->cam_yaw, 0.0f);
