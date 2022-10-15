@@ -1,6 +1,14 @@
 cmake_minimum_required(VERSION 3.15)
 
-project(sdl-bgfx-imgui-starter LANGUAGES CXX)
+option(SUPERBUILD "Perform a superbuild (or not)" OFF)
+
+if (SUPERBUILD)
+  project(superbuild LANGUAGES CXX)
+  include(cmake/superbuild.cmake)
+  return()
+else ()
+  project(sdl-bgfx-imgui-starter LANGUAGES CXX)
+endif ()
 
 find_package(SDL2 REQUIRED CONFIG CMAKE_FIND_ROOT_PATH_BOTH)
 find_package(bgfx REQUIRED CONFIG CMAKE_FIND_ROOT_PATH_BOTH)
