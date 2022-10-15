@@ -34,6 +34,7 @@ ExternalProject_Add(
   URL https://www.libsdl.org/release/SDL2-2.0.22.tar.gz
   URL_HASH MD5=40aedb499cb2b6f106d909d9d97f869a
   PREFIX ${PREFIX_DIR}
+  BINARY_DIR src/SDL2-build-${build_type_dir}
   CMAKE_COMMAND ${THIRD_PARTY_CMAKE_COMMAND}
   CMAKE_ARGS ${build_type_arg} -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>
   BUILD_COMMAND cmake --build <BINARY_DIR> ${build_config_arg}
@@ -45,6 +46,7 @@ ExternalProject_Add(
   GIT_REPOSITORY https://github.com/pr0g/bgfx.cmake.git
   GIT_TAG 26a0f1e54d131841dab511539ff3e6c5e6472fed
   PREFIX ${PREFIX_DIR}
+  BINARY_DIR src/bgfx-build-${build_type_dir}
   CMAKE_COMMAND ${THIRD_PARTY_CMAKE_COMMAND}
   CMAKE_ARGS ${build_type_arg}
              -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>
@@ -60,6 +62,7 @@ ExternalProject_Add(
   GIT_REPOSITORY https://github.com/pr0g/imgui.cmake.git
   GIT_TAG 7e417a39d496820cc25cacbf28b544796a81a634
   PREFIX ${PREFIX_DIR}
+  BINARY_DIR src/imgui.cmake-build-${build_type_dir}
   CMAKE_COMMAND ${THIRD_PARTY_CMAKE_COMMAND}
   CMAKE_ARGS ${build_type_arg} -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>
              "$<$<CONFIG:Debug>:-DCMAKE_DEBUG_POSTFIX=d>"
