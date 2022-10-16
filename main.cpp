@@ -1,9 +1,11 @@
-#include "SDL.h"
-#include "SDL_syswm.h"
+#include <bgfx/bgfx.h>
+#include <bgfx/platform.h>
+#include <bx/math.h>
+
+#include <SDL.h>
+#include <SDL_syswm.h>
+
 #include "bgfx-imgui/imgui_impl_bgfx.h"
-#include "bgfx/bgfx.h"
-#include "bgfx/platform.h"
-#include "bx/math.h"
 #include "file-ops.h"
 #include "imgui.h"
 #include "sdl-imgui/imgui_impl_sdl.h"
