@@ -7,4 +7,7 @@ ExternalProject_Add(
   CMAKE_ARGS
     -DCMAKE_PREFIX_PATH=${CMAKE_CURRENT_SOURCE_DIR}/third-party/${THIRD_PARTY_BUILD_DIR_NAME}
     -DSUPERBUILD=OFF
+    ${build_type_arg}
+    -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+  BUILD_COMMAND cmake --build <BINARY_DIR> ${build_config_arg}
   INSTALL_COMMAND "")

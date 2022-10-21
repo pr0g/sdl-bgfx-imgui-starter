@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.24)
 
 if (NOT SUPERBUILD)
   project(third-party)
-endif()
+endif ()
 
 include(ExternalProject)
 
