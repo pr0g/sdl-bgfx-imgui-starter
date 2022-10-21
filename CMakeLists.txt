@@ -30,6 +30,8 @@ target_link_options(
   ${PROJECT_NAME} PRIVATE $<$<BOOL:${EMSCRIPTEN}>:-sMAX_WEBGL_VERSION=2
   -sALLOW_MEMORY_GROWTH=1 --preload-file=shader/v_simple.bin
   --preload-file=shader/f_simple.bin>)
+target_compile_definitions(
+  ${PROJECT_NAME} PRIVATE $<$<BOOL:${EMSCRIPTEN}>:USE_SDL=2>)
 
 if (EMSCRIPTEN)
   set_target_properties(${PROJECT_NAME} PROPERTIES SUFFIX ".html")
