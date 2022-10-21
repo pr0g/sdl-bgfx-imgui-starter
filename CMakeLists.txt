@@ -2,13 +2,17 @@ cmake_minimum_required(VERSION 3.24)
 
 option(SUPERBUILD "Perform a superbuild (or not)" OFF)
 
+project(sdl-bgfx-imgui-starter LANGUAGES CXX)
+
 if (SUPERBUILD)
+  if (EMSCRIPTEN)
+    set(THIRD_PARTY_BUILD_DIR_NAME embuild)
+  else ()
+    set(THIRD_PARTY_BUILD_DIR_NAME build)
+  endif ()
   include(third-party/CMakeLists.txt)
-  project(sdl-bgfx-imgui-starter LANGUAGES CXX)
   include(cmake/superbuild.cmake)
   return()
-else ()
-  project(sdl-bgfx-imgui-starter LANGUAGES CXX)
 endif ()
 
 find_package(SDL2 REQUIRED CONFIG CMAKE_FIND_ROOT_PATH_BOTH)
