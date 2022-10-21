@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.24)
 
-project(third-party)
+if (NOT SUPERBUILD)
+  project(third-party)
+endif()
 
 include(ExternalProject)
 

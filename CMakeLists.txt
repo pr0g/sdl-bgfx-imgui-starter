@@ -31,7 +31,7 @@ target_link_options(
   -sALLOW_MEMORY_GROWTH=1 --preload-file=shader/v_simple.bin
   --preload-file=shader/f_simple.bin>)
 
-if (${EMSCRIPTEN})
+if (EMSCRIPTEN)
   set_target_properties(${PROJECT_NAME} PROPERTIES SUFFIX ".html")
   add_custom_command(
     TARGET ${PROJECT_NAME}
