@@ -1,13 +1,17 @@
 # Third Party Setup
 
+> __Attention__: All steps listed here are now optional and not required due to the new _superbuild_ CMake script and option (`-DSUPERBUILD=ON`) supported by the repository.
+>
+>All third party dependencies will be automatically downloaded and built as part of the normal configuration process (see instructions in the main [__README__](/README.md) and accompanying configure scripts for details).
+
 ## Setup
 
 ### Windows
 
-- First run `vcvars64.bat` from a terminal of your choice.
+- First run `VsDevCmd.bat` from a terminal of your choice.
   - Most likely to be located here (year and version may differ)
-    - `"C:\Program Files (x86)\Microsoft Visual Studio\<year>\<version>\VC\Auxiliary\Build\vcvars64.bat"`
-    - e.g. `"C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars64.bat"`
+    - `"C:\Program Files\Microsoft Visual Studio\<year>\Community\Common7\Tools\VsDevCmd.bat"`
+    - e.g. `"C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\Tools\VsDevCmd.bat"`
 - This is to ensure both the compiler (`cl.exe`) and Ninja are added to your path and can be found by CMake.
 
 ### macOS
@@ -17,7 +21,7 @@
 
 ### Linux
 
-- You may need to install a few libraries before the third-party dependencies can be built (most notably OpenGL and X11 if they're not already on your system). You'll likely get CMake configure errors if you're missing them. I ran:
+- You may need to install a few libraries before the third party dependencies can be built (most notably OpenGL and X11 if they're not already on your system). You'll likely get CMake configure errors if you're missing them. I ran:
 
 ```bash
 sudo apt-get install libx11-dev libglu1-mesa-dev libgl1-mesa-glx libxext-dev ninja-build
@@ -51,7 +55,7 @@ Once everything is complete you should be able to continue with the instructions
 
 ## Emscripten
 
-It's also possible to build the third-party dependencies for use with Emscripten. To do this run the same commands as before, only prefix the configure step with `emcmake`.
+It's also possible to build the third party dependencies for use with Emscripten. To do this run the same commands as before, only prefix the configure step with `emcmake`.
 
 ```bash
 # install emsdk (instructions: https://emscripten.org/docs/getting_started/downloads.html)
