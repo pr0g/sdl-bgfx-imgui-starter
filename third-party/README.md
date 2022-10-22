@@ -1,6 +1,6 @@
 # Third Party Setup
 
-> __Attention__: All steps listed here are now optional and not required due to the new _superbuild_ CMake script and option (`-DSUPERBUILD=ON`) supported by the repository.
+> __Note__: _Nearly_ all steps listed here are now optional and are not required thanks to the new _superbuild_ CMake script and option (`-DSUPERBUILD=ON`) supported by the repository.
 >
 >All third party dependencies will be automatically downloaded and built as part of the normal configuration process (see instructions in the main [__README__](/README.md) and accompanying configure scripts for details).
 
@@ -21,9 +21,11 @@
 
 ### Linux
 
-- You may need to install a few libraries before the third party dependencies can be built (most notably OpenGL and X11 if they're not already on your system). You'll likely get CMake configure errors if you're missing them. I ran:
+- You may need to install a few libraries before the third party dependencies can be built (most notably OpenGL and X11 if they're not already on your system). You'll likely get CMake configure errors if you're missing them.
 
 ```bash
+# suggested command
+
 sudo apt-get install libx11-dev libglu1-mesa-dev libgl1-mesa-glx libxext-dev ninja-build
 ```
 
@@ -55,7 +57,7 @@ Once everything is complete you should be able to continue with the instructions
 
 ## Emscripten
 
-It's also possible to build the third party dependencies for use with Emscripten. To do this run the same commands as before, only prefix the configure step with `emcmake`.
+It's possible to build the third party dependencies for use with Emscripten. To do this run the same commands as before, only prefix the configure step with `emcmake`. It's recommended to use `embuild` as the build folder to stop Emscripten overwriting the native build that may already exist.
 
 ```bash
 # install emsdk (instructions: https://emscripten.org/docs/getting_started/downloads.html)
@@ -64,8 +66,8 @@ source <emsdk>/emsdk_env.sh # on macOS/Linux
 # or
 <emsdk>/emsdk_env.bat # on Windows
 #
-emcmake cmake -B build # configure for Emscripten
-cmake --build build # build libraries for Emscripten
+emcmake cmake -B embuild # configure for Emscripten
+cmake --build embuild # build libraries for Emscripten
 ```
 
 ## Wrap-Up
