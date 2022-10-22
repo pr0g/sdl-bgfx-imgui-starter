@@ -213,13 +213,24 @@ int main(int argc, char** argv)
     bgfx::IndexBufferHandle ibh = bgfx::createIndexBuffer(
         bgfx::makeRef(cube_tri_list, sizeof(cube_tri_list)));
 
+    const std::string shader_root =
+#if BX_PLATFORM_EMSCRIPTEN
+        "shader/embuild/";
+#else
+        "shader/build/";
+#endif // BX_PLATFORM_EMSCRIPTEN
+
     std::string vshader;
-    if (!fileops::read_file("shader/v_simple.bin", vshader)) {
+    if (!fileops::read_file(shader_root + "v_simple.bin", vshader)) {
+        printf("Could not find shader vertex shader (ensure shaders have been compiled).\n"
+        "Run compile-shaders-<platform>.sh/bat\n");
         return 1;
     }
 
     std::string fshader;
-    if (!fileops::read_file("shader/f_simple.bin", fshader)) {
+    if (!fileops::read_file(shader_root + "f_simple.bin", fshader)) {
+        printf("Could not find shader fragment shader (ensure shaders have been compiled).\n"
+        "Run compile-shaders-<platform>.sh/bat\n");
         return 1;
     }
 
