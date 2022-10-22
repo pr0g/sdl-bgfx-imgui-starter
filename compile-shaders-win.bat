@@ -2,6 +2,8 @@
 
 REM compile shaders
 
+mkdir shader\build
+
 REM simple shader
 third-party\build\bin\shaderc.exe ^
 -f shader\v_simple.sc -o shader\build\v_simple.bin ^
