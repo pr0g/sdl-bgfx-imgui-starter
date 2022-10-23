@@ -10,7 +10,7 @@
 namespace fileops
 {
 
-inline static std::streamoff stream_size(std::istream& file)
+inline std::streamoff stream_size(std::istream& file)
 {
     std::istream::pos_type current_pos = file.tellg();
     if (current_pos == std::istream::pos_type(-1)) {

@@ -1,4 +1,5 @@
 build*/
+embuild*/
 install/
 imgui.ini
 *.bin
