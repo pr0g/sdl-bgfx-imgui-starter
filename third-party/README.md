@@ -9,9 +9,10 @@
 ### Windows
 
 - First run `VsDevCmd.bat` from a terminal of your choice.
-  - Most likely to be located here (year and version may differ)
-    - `"C:\Program Files\Microsoft Visual Studio\<year>\Community\Common7\Tools\VsDevCmd.bat"`
-    - e.g. `"C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\Tools\VsDevCmd.bat"`
+  - Most likely to be located here (year and version may differ).
+    - `"C:\Program Files\Microsoft Visual Studio\<year>\Community\Common7\Tools\VsDevCmd.bat" -arch=x64 -host_arch=x64`
+    - e.g. `"C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\Tools\VsDevCmd.bat" -arch=x64 -host_arch=x64`
+    - _Note:_ `-arch=x64 -host_arch=x64` are required for `x86_64` otherwise `x86` (32bit) is used as the default.
 - This is to ensure both the compiler (`cl.exe`) and Ninja are added to your path and can be found by CMake.
 
 ### macOS
