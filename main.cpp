@@ -8,7 +8,7 @@
 #include "bgfx-imgui/imgui_impl_bgfx.h"
 #include "file-ops.h"
 #include "imgui.h"
-#include "sdl-imgui/imgui_impl_sdl.h"
+#include "sdl-imgui/imgui_impl_sdl2.h"
 
 #if BX_PLATFORM_EMSCRIPTEN
 #include "emscripten.h"

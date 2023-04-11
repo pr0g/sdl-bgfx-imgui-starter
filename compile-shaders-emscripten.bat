@@ -2,7 +2,7 @@
 
 REM compile shaders
 
-mkdir shader\embuild
+if not exist shader\embuild mkdir shader\embuild
 
 REM simple shader
 third-party\build\bin\shaderc.exe ^

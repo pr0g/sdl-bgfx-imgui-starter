@@ -20,7 +20,7 @@ find_package(bgfx REQUIRED CONFIG CMAKE_FIND_ROOT_PATH_BOTH)
 find_package(imgui.cmake REQUIRED CONFIG CMAKE_FIND_ROOT_PATH_BOTH)
 
 add_executable(${PROJECT_NAME})
-target_sources(${PROJECT_NAME} PRIVATE main.cpp sdl-imgui/imgui_impl_sdl.cpp
+target_sources(${PROJECT_NAME} PRIVATE main.cpp sdl-imgui/imgui_impl_sdl2.cpp
                                        bgfx-imgui/imgui_impl_bgfx.cpp)
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_11)
 target_link_libraries(

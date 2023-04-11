@@ -35,8 +35,8 @@ endif ()
 if (NOT EMSCRIPTEN)
   ExternalProject_Add(
     SDL2
-    URL https://github.com/libsdl-org/SDL/releases/download/release-2.24.1/SDL2-2.24.1.tar.gz
-    URL_HASH MD5=10bad2a286f155565edc611f41345de1
+    URL https://github.com/libsdl-org/SDL/releases/download/release-2.26.4/SDL2-2.26.4.tar.gz
+    URL_HASH MD5=a8a81a12f3181071fe87ef2eab1202b9
     PREFIX ${PREFIX_DIR}
     BINARY_DIR ${PREFIX_DIR}/src/SDL2-build/${build_type_dir}
     CMAKE_COMMAND ${THIRD_PARTY_CMAKE_COMMAND}
@@ -49,7 +49,7 @@ endif ()
 ExternalProject_Add(
   bgfx
   GIT_REPOSITORY https://github.com/pr0g/bgfx.cmake.git
-  GIT_TAG 26a0f1e54d131841dab511539ff3e6c5e6472fed
+  GIT_TAG bde3f94ce75ffd184e9a3bdfe947a3bec69233eb
   PREFIX ${PREFIX_DIR}
   BINARY_DIR ${PREFIX_DIR}/src/bgfx-build/${build_type_dir}
   CMAKE_COMMAND ${THIRD_PARTY_CMAKE_COMMAND}
@@ -65,7 +65,7 @@ ExternalProject_Add(
 ExternalProject_Add(
   imgui.cmake
   GIT_REPOSITORY https://github.com/pr0g/imgui.cmake.git
-  GIT_TAG 7e417a39d496820cc25cacbf28b544796a81a634
+  GIT_TAG 2dddd30d0eb8acb84c7f34926ca241d14d6b6825
   PREFIX ${PREFIX_DIR}
   BINARY_DIR ${PREFIX_DIR}/src/imgui.cmake-build/${build_type_dir}
   CMAKE_COMMAND ${THIRD_PARTY_CMAKE_COMMAND}
