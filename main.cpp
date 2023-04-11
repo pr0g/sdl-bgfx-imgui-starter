@@ -34,7 +34,7 @@ static const uint16_t cube_tri_list[] = {
     1, 5, 3, 5, 7, 3, 0, 4, 1, 4, 5, 1, 2, 3, 6, 6, 3, 7,
 };
 
-static bgfx::ShaderHandle createShader(
+static bgfx::ShaderHandle create_shader(
     const std::string& shader, const char* name)
 {
     const bgfx::Memory* mem = bgfx::copy(shader.data(), shader.size());
@@ -67,9 +67,9 @@ void main_loop(void* data)
 {
     auto context = static_cast<context_t*>(data);
 
-    for (SDL_Event currentEvent; SDL_PollEvent(&currentEvent) != 0;) {
-        ImGui_ImplSDL2_ProcessEvent(&currentEvent);
-        if (currentEvent.type == SDL_QUIT) {
+    for (SDL_Event current_event; SDL_PollEvent(&current_event) != 0;) {
+        ImGui_ImplSDL2_ProcessEvent(&current_event);
+        if (current_event.type == SDL_QUIT) {
             context->quit = true;
             break;
         }
@@ -190,7 +190,6 @@ int main(int argc, char** argv)
     bgfx::setViewRect(0, 0, 0, width, height);
 
     ImGui::CreateContext();
-    ImGuiIO& io = ImGui::GetIO();
 
     ImGui_Implbgfx_Init(255);
 #if BX_PLATFORM_WINDOWS
@@ -222,20 +221,22 @@ int main(int argc, char** argv)
 
     std::string vshader;
     if (!fileops::read_file(shader_root + "v_simple.bin", vshader)) {
-        printf("Could not find shader vertex shader (ensure shaders have been compiled).\n"
-        "Run compile-shaders-<platform>.sh/bat\n");
+        printf("Could not find shader vertex shader (ensure shaders have been "
+               "compiled).\n"
+               "Run compile-shaders-<platform>.sh/bat\n");
         return 1;
     }
 
     std::string fshader;
     if (!fileops::read_file(shader_root + "f_simple.bin", fshader)) {
-        printf("Could not find shader fragment shader (ensure shaders have been compiled).\n"
-        "Run compile-shaders-<platform>.sh/bat\n");
+        printf("Could not find shader fragment shader (ensure shaders have "
+               "been compiled).\n"
+               "Run compile-shaders-<platform>.sh/bat\n");
         return 1;
     }
 
-    bgfx::ShaderHandle vsh = createShader(vshader, "vshader");
-    bgfx::ShaderHandle fsh = createShader(fshader, "fshader");
+    bgfx::ShaderHandle vsh = create_shader(vshader, "vshader");
+    bgfx::ShaderHandle fsh = create_shader(fshader, "fshader");
     bgfx::ProgramHandle program = bgfx::createProgram(vsh, fsh, true);
 
     context_t context;
