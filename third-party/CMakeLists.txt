@@ -35,8 +35,8 @@ endif ()
 if (NOT EMSCRIPTEN)
   ExternalProject_Add(
     SDL2
-    URL https://github.com/libsdl-org/SDL/releases/download/release-2.26.5/SDL2-2.26.5.tar.gz
-    URL_HASH MD5=47f22c109070431ecccd90abd3c0ab6e
+    GIT_REPOSITORY https://github.com/libsdl-org/SDL.git
+    GIT_TAG release-2.28.4
     PREFIX ${PREFIX_DIR}
     BINARY_DIR ${PREFIX_DIR}/src/SDL2-build/${build_type_dir}
     CMAKE_COMMAND ${THIRD_PARTY_CMAKE_COMMAND}
@@ -49,7 +49,7 @@ endif ()
 ExternalProject_Add(
   bgfx
   GIT_REPOSITORY https://github.com/pr0g/bgfx.cmake.git
-  GIT_TAG b208d0c37b84fd6e92096a6c7fcdfc4856af198e
+  GIT_TAG bde3f94ce75ffd184e9a3bdfe947a3bec69233eb
   PREFIX ${PREFIX_DIR}
   BINARY_DIR ${PREFIX_DIR}/src/bgfx-build/${build_type_dir}
   CMAKE_COMMAND ${THIRD_PARTY_CMAKE_COMMAND}
