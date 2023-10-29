@@ -49,12 +49,20 @@ if (EMSCRIPTEN)
       ${CMAKE_CURRENT_SOURCE_DIR}/shader/embuild/f_simple.bin
       $<TARGET_FILE_DIR:${PROJECT_NAME}>/shader/embuild
     VERBATIM)
+else ()
+  add_custom_command(
+    TARGET ${PROJECT_NAME}
+    POST_BUILD
+    COMMAND
+      ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/shader/build
+      $<TARGET_FILE_DIR:${PROJECT_NAME}>/shader/build
+    VERBATIM)
 endif ()
 
 set_target_properties(
   ${PROJECT_NAME}
   # required for project when using visual studio generator
-  PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+  PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/$<CONFIG>)
 
 if (WIN32)
   # copy the SDL2.dll to the same folder as the executable
